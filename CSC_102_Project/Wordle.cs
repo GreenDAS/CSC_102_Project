@@ -69,26 +69,24 @@ namespace CSC_102_Project
                         }
                     }
                 }
-                
+
             }
 
             public void CustomWordEntered(string CustomWord)
             {
-
                 correctWord = CustomWord;
-
             }
         }
 
         private class Keyboard : GuessHandler
         {
             public System.Windows.Forms.Label[] KeyboardLabels = new System.Windows.Forms.Label[26];
-            
+
             static string guessMade = string.Empty;
 
             public void changeColor(Label LabelToUpdate, correctness Correctness)
             {
-                switch(Correctness)
+                switch (Correctness)
                 {
                     case correctness.notInWord:
                         LabelToUpdate.BackColor = Color.DarkGray;
@@ -111,13 +109,13 @@ namespace CSC_102_Project
 
             public void keyPressed(string Key)
             {
-                if (guessMade.Length < 0) { guessMade += Key; }
+                if (guessMade.Length < 5) { guessMade += Key; }
             }
 
             public void resetPressed()
             {
                 //reset Board and Grab new Wrd
-                
+
                 guessMade = string.Empty;
             }
 
@@ -128,26 +126,64 @@ namespace CSC_102_Project
 
             public void deletePressed()
             {
-
+                if (guessMade.Length > 0)
+                {
+                    guessMade = guessMade.Remove(guessMade.Length - 1);
+                }
             }
 
-            public void customWordEntered()
+            public void customWordEntered(Wordle wrdle, string CustomWrd)
             {
+                wrdle.CustomWordEntered(CustomWrd);
+            }
 
+            public string DegbugPrint
+            {
+                get
+                {
+                    return guessMade;
+                }
             }
 
             public Keyboard()
             {
 
             }
-                
+
         }
 
         private class Display : Keyboard
         {
-            public System.Windows.Forms.Label[,] DisplayLabels = new System.Windows.Forms.Label[5, 6];
+            public Label[,] DisplayLabels = new Label[5, 6];
             
-        }
+            public Display()
+            {
+                int xpad = 13;
+                int ypad = 13;
+                int x = 0;
+                int y = 0;
+                for (int i = 0; i < 5; i++)
+                {
+                    for (int j = 0; j < 6; j++)
+                    {
+                        DisplayLabels[i, j] = new Label();
+                        DisplayLabels[i, j].Text = " ";
+                        DisplayLabels[i, j].BackColor = Color.Black;
+                        DisplayLabels[i, j].BackColor = Color.White;
+                        DisplayLabels[i, j].AutoSize = false;
+                        DisplayLabels[i, j].Size = new Size(50, 50);
+                        x += 50;
+                        
+                        DisplayLabels[i, j].Location = new Point(x + (i * xpad), y + (j * ypad));
+
+                    }
+                    y += 50;
+                }
+            }
+
+
+        }   
+    
         
         
 
@@ -157,6 +193,7 @@ namespace CSC_102_Project
 
         private readonly Keyboard testBoard = new Keyboard();
         private readonly Display testDisplay = new Display();
+        private readonly Wordle testWordle = new Wordle();
 
         //
         //
@@ -175,7 +212,27 @@ namespace CSC_102_Project
         {
             if (lastKey != e.KeyChar.ToString().ToUpper())
             {
-                MessageBox.Show($"Form.KeyPress: '{e.KeyChar.ToString().ToUpper()}' pressed.");
+                if (e.KeyChar == (char)Keys.Back)
+                {
+                    testBoard.deletePressed();
+                }
+                else if (e.KeyChar == (char)Keys.Enter)
+                {
+                    testBoard.enterPressed(testWordle);
+                }
+                else if (e.KeyChar == (char)Keys.Escape)
+                {
+                    testBoard.resetPressed();
+                }
+                else
+                {
+                    testBoard.keyPressed(e.KeyChar.ToString().ToUpper());
+                }
+
+                if (testBoard.DegbugPrint.Length == 5)
+                {
+                MessageBox.Show($"Form.KeyPress: '{testBoard.DegbugPrint}' pressed.");
+                }
                 lastKey = e.KeyChar.ToString().ToUpper();
             }
         }
@@ -185,6 +242,6 @@ namespace CSC_102_Project
         {
             lastKey = "";
         }
-        //
+
     }
 }
