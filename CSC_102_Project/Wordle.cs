@@ -92,15 +92,15 @@ namespace CSC_102_Project
                 switch (Correctness)
                 {
                     case correctness.notInWord:
-                        LabelToUpdate.BackColor = Color.DarkGray;
+                        LabelToUpdate.BackColor = Color.FromArgb(200, 200, 200, 200);
                         break;
 
                     case correctness.inWord:
-                        LabelToUpdate.BackColor = Color.Yellow;
+                        LabelToUpdate.BackColor = Color.FromArgb(200, 222, 222, 33);
                         break;
 
                     case correctness.correctPlace:
-                        LabelToUpdate.BackColor = Color.Green;
+                        LabelToUpdate.BackColor = Color.FromArgb(200, 0, 255, 0);
                         break;
 
                     default:
