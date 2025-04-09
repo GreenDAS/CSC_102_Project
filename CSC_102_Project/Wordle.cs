@@ -16,7 +16,7 @@ namespace CSC_102_Project
 
         private class GuessHandler
         {
-            static string currentGuess = string.Empty;
+            protected static string currentGuess = string.Empty;
 
             protected static int currentTimeGuessing = 1;
 
@@ -85,8 +85,6 @@ namespace CSC_102_Project
         {
             protected static System.Windows.Forms.Label[][] KeyboardLabels;
 
-            static string guessMade = string.Empty;
-
             public void changeColor(Label LabelToUpdate, correctness Correctness)
             {
                 switch (Correctness)
@@ -112,30 +110,30 @@ namespace CSC_102_Project
 
             public void keyPressed(string Key)
             {
-                if (guessMade.Length < 5) { guessMade += Key; }
+                if (currentGuess.Length < 5) { currentGuess += Key; }
             }
 
             public void resetPressed()
             {
                 //reset Board and Grab new Wrd
 
-                guessMade = string.Empty;
+                currentGuess = string.Empty;
             }
 
             public void enterPressed(Wordle wrdle, Display disp)
             {
 
-                wrdle.IsCorrect(guessMade);
+                wrdle.IsCorrect(currentGuess);
 
                 // Find Label and Update Color
                 bool labelFoundFlag = false;
-                for (int i = 0; i < guessMade.Length; i++)
+                for (int i = 0; i < currentGuess.Length; i++)
                 {
                     for (int j = 0; j < KeyboardLabels.Length; j++)
                     {
                         for (int k = 0; k < KeyboardLabels[j].Length; k++)
                         {
-                            if (KeyboardLabels[j][k].Text.ToUpper() == guessMade[i].ToString().ToUpper())
+                            if (KeyboardLabels[j][k].Text.ToUpper() == currentGuess[i].ToString().ToUpper())
                             {
                                 changeColor(KeyboardLabels[j][k], guessColorMap[i]);
                                 labelFoundFlag = true;
@@ -153,15 +151,15 @@ namespace CSC_102_Project
                     disp.changeColor();
                 }
                 currentTimeGuessing++;
-
+                currentGuess = string.Empty;
 
             }
 
             public void deletePressed()
             {
-                if (guessMade.Length > 0)
+                if (currentGuess.Length > 0)
                 {
-                    guessMade = guessMade.Remove(guessMade.Length - 1);
+                    currentGuess = currentGuess.Remove(currentGuess.Length - 1);
                 }
             }
 
@@ -174,7 +172,7 @@ namespace CSC_102_Project
             {
                 get
                 {
-                    return guessMade;
+                    return currentGuess;
                 }
             }
 
@@ -225,6 +223,31 @@ namespace CSC_102_Project
                 }
                 
             }
+
+
+            public void updateDisplay()
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    if (currentTimeGuessing > 6)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            DisplayLabels[i, currentTimeGuessing - 1].Text = currentGuess[i].ToString();
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            DisplayLabels[i, currentTimeGuessing - 1].Text = " ";
+                        }
+                    }
+                }
+            }
+
+
 
             public Display(Label[,] dispLabels)
             {
@@ -286,12 +309,7 @@ namespace CSC_102_Project
                 {
                     testBoard.keyPressed(e.KeyChar.ToString().ToUpper());
                 }
-
-                if (testBoard.DegbugPrint.Length == 5)
-                {
-                MessageBox.Show($"Form.KeyPress: '{testBoard.DegbugPrint}' pressed.");
-                }
-                lastKey = e.KeyChar.ToString().ToUpper();
+                testDisplay.updateDisplay();
             }
         }
 
@@ -323,13 +341,6 @@ namespace CSC_102_Project
             {
                 testBoard.keyPressed(clickedLabel.Text.ToUpper());
             }
-            if (testBoard.DegbugPrint.Length == 5)
-            {
-                MessageBox.Show($"Form.KeyPress: '{testBoard.DegbugPrint}' pressed.");
-            }
         }
-
-
-
     }
 }
