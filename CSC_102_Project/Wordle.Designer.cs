@@ -35,7 +35,7 @@ namespace CSC_102_Project
             // WordleForm
             // 
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(884, 711);
+            this.ClientSize = new System.Drawing.Size(900, 750);
             this.ForeColor = System.Drawing.SystemColors.Control;
             this.MaximumSize = new System.Drawing.Size(900, 750);
             this.MinimumSize = new System.Drawing.Size(900, 750);
@@ -52,12 +52,95 @@ namespace CSC_102_Project
         // Coder Implemented Code
         //
         public System.Windows.Forms.Label[,] DisplayLabels = new System.Windows.Forms.Label[5, 6];
+        public System.Windows.Forms.Label[][] KeyboardLabels = new System.Windows.Forms.Label[3][];
+
+        public System.Windows.Forms.Label[] KeyboardRow1 = new System.Windows.Forms.Label[10];
+        public string KeyboardRow1LetterMap =  "QWERTYUIOP";
+
+        public System.Windows.Forms.Label[] KeyboardRow2 = new System.Windows.Forms.Label[9];
+        public string KeyboardRow2LetterMap = "ASDFGHJKL";
+
+        public System.Windows.Forms.Label[] KeyboardRow3 = new System.Windows.Forms.Label[7];
+        public string KeyboardRow3LetterMap = "ZXCVBNM";
+
+        int xpad = 13;
+        int ypad = 13;
+
+        private System.Windows.Forms.Label[] InitKeyboardRow1()
+        {
+            
+            int x = this.Width / 2 - ((10 * (50 + 13)) + 13) / 2;
+            int y = this.Height - 300;
+            for (int i = 0; i < 10; i++)
+            {
+                this.KeyboardRow1[i] = new System.Windows.Forms.Label();
+                this.KeyboardRow1[i].Text = KeyboardRow1LetterMap[i].ToString();
+                this.KeyboardRow1[i].Name = $"Key {KeyboardRow1LetterMap[i]}";
+                this.KeyboardRow1[i].BackColor = Color.Black;
+                this.KeyboardRow1[i].ForeColor = Color.White;
+                this.KeyboardRow1[i].BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                this.KeyboardRow1[i].TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                this.KeyboardRow1[i].Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                this.KeyboardRow1[i].AutoSize = false;
+                this.KeyboardRow1[i].Location = new System.Drawing.Point(x + ((i + 1) * xpad), y);
+                this.KeyboardRow1[i].Size = new System.Drawing.Size(50, 50);
+                this.Controls.Add(this.KeyboardRow1[i]);
+                x += 50;
+            }
+            return KeyboardRow1;
+        }
+
+        private System.Windows.Forms.Label[] InitKeyboardRow2()
+        {
+
+            int x = this.Width / 2 - ((9 * (50 + 13)) + 13) / 2;
+            int y = this.Height - 200;
+            for (int i = 0; i < 9; i++)
+            {
+                this.KeyboardRow2[i] = new System.Windows.Forms.Label();
+                this.KeyboardRow2[i].Text = KeyboardRow2LetterMap[i].ToString();
+                this.KeyboardRow2[i].Name = $"Key {KeyboardRow2LetterMap[i]}";
+                this.KeyboardRow2[i].BackColor = Color.Black;
+                this.KeyboardRow2[i].ForeColor = Color.White;
+                this.KeyboardRow2[i].BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                this.KeyboardRow2[i].TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                this.KeyboardRow2[i].Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                this.KeyboardRow2[i].AutoSize = false;
+                this.KeyboardRow2[i].Location = new System.Drawing.Point(x + ((i + 1) * xpad), y);
+                this.KeyboardRow2[i].Size = new System.Drawing.Size(50, 50);
+                this.Controls.Add(this.KeyboardRow2[i]);
+                x += 50;
+            }
+            return KeyboardRow2;
+        }
+
+        private System.Windows.Forms.Label[] InitKeyboardRow3()
+        {
+
+            int x = this.Width / 2 - ((7 * (50 + 13)) + 13) / 2;
+            int y = this.Height - 100;
+            for (int i = 0; i < 7; i++)
+            {
+                this.KeyboardRow3[i] = new System.Windows.Forms.Label();
+                this.KeyboardRow3[i].Text = KeyboardRow3LetterMap[i].ToString();
+                this.KeyboardRow3[i].Name = $"Key {KeyboardRow3LetterMap[i]}";
+                this.KeyboardRow3[i].BackColor = Color.Black;
+                this.KeyboardRow3[i].ForeColor = Color.White;
+                this.KeyboardRow3[i].BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                this.KeyboardRow3[i].TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                this.KeyboardRow3[i].Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                this.KeyboardRow3[i].AutoSize = false;
+                this.KeyboardRow3[i].Location = new System.Drawing.Point(x + ((i + 1) * xpad), y);
+                this.KeyboardRow3[i].Size = new System.Drawing.Size(50, 50);
+                this.Controls.Add(this.KeyboardRow3[i]);
+                x += 50;
+            }
+            return KeyboardRow3;
+        }
 
         private System.Windows.Forms.Label[,] InitDisplay()
         {
             
-            int xpad = 13;
-            int ypad = 13;
             int x = this.Width/2 - ((5*(50+13))+13)/2;
             int y = 0;
 
