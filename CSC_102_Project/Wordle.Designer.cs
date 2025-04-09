@@ -77,6 +77,7 @@ namespace CSC_102_Project
                 }
                 y = 0;
                 x += 50;
+
                 
             }
         }
