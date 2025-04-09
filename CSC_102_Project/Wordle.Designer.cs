@@ -94,7 +94,7 @@ namespace CSC_102_Project
         {
 
             int x = this.Width / 2 - ((9 * (50 + 13)) + 13) / 2;
-            int y = this.Height - 200;
+            int y = this.Height - ((300 - 13 * 1) - 50 * 1);
             for (int i = 0; i < 9; i++)
             {
                 this.KeyboardRow2[i] = new System.Windows.Forms.Label();
@@ -118,7 +118,7 @@ namespace CSC_102_Project
         {
 
             int x = this.Width / 2 - ((7 * (50 + 13)) + 13) / 2;
-            int y = this.Height - 100;
+            int y = this.Height - ((300 - 13*2) - 50*2);
             for (int i = 0; i < 7; i++)
             {
                 this.KeyboardRow3[i] = new System.Windows.Forms.Label();
@@ -137,6 +137,15 @@ namespace CSC_102_Project
             }
             return KeyboardRow3;
         }
+
+        private System.Windows.Forms.Label[][] InitKeyboard()
+        {
+            this.KeyboardLabels[0] = InitKeyboardRow1();
+            this.KeyboardLabels[1] = InitKeyboardRow2();
+            this.KeyboardLabels[2] = InitKeyboardRow3();
+            return KeyboardLabels;
+        }
+
 
         private System.Windows.Forms.Label[,] InitDisplay()
         {
