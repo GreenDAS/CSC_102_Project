@@ -55,24 +55,26 @@ namespace CSC_102_Project
                 }
                 else
                 {
+                    for (int i = 0; i < guessColorMap.Length; i++)
+                    {
+                        guessColorMap[i] = correctness.notInWord;
+                    }
                     for (int i = 0; i < correctWord.Length; i++)
                     {
                         for (int i2 = 0; i2 < currentGuess.Length; i2++)
                         {
-                            if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i])
+                            if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i2] & correctness.inWord > guessColorMap[i2])
                             {
-                                guessColorMap[i] = correctness.correctPlace;
-                                break;
+                                guessColorMap[i2] = correctness.inWord;
                             }
-                            else if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i2])
+                            else if (correctness.notInWord == guessColorMap[i2])
                             {
-                                guessColorMap[i] = correctness.inWord;
-                                break;
+                                guessColorMap[i2] = correctness.notInWord;
                             }
-                            else
-                            {
-                                guessColorMap[i] = correctness.notInWord;
-                            }
+                        }
+                        if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i])
+                        {
+                            guessColorMap[i] = correctness.correctPlace;
                         }
                     }
                 }
@@ -94,14 +96,21 @@ namespace CSC_102_Project
 
             public void changeColor(Label LabelToUpdate, correctness Correctness)
             {
+                
                 switch (Correctness)
                 {
                     case correctness.notInWord:
-                        LabelToUpdate.BackColor = Color.FromArgb(200, 200, 200, 200);
+                        if (LabelToUpdate.BackColor != Color.FromArgb(200, 222, 222, 33) | LabelToUpdate.BackColor != Color.FromArgb(200, 0, 255, 0))
+                        {
+                            LabelToUpdate.BackColor = Color.FromArgb(200, 200, 200, 200);
+                        }
                         break;
 
                     case correctness.inWord:
-                        LabelToUpdate.BackColor = Color.FromArgb(200, 222, 222, 33);
+                        if (LabelToUpdate.BackColor != Color.FromArgb(200, 0, 255, 0))
+                        {
+                            LabelToUpdate.BackColor = Color.FromArgb(200, 222, 222, 33);
+                        }
                         break;
 
                     case correctness.correctPlace:
