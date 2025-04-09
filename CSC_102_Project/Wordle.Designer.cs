@@ -290,7 +290,8 @@ namespace CSC_102_Project
             this.CustomWordtextBox.Size = new System.Drawing.Size(200, 20);
             this.Controls.Add(this.CustomWordtextBox);
             this.CustomWordButton.Text = "Submit";
-            this.CustomWordButton.Location = new System.Drawing.Point(220, 40);
+            this.CustomWordButton.Location = new System.Drawing.Point(10, 70);
+            this.CustomWordButton.Size = new System.Drawing.Size(200, 20);
             this.CustomWordButton.Click += new System.EventHandler(this.WordleForm_CustomWordButton_Click);
             this.Controls.Add(this.CustomWordButton);
             return CustomWordtextBox;

@@ -343,6 +343,7 @@ namespace CSC_102_Project
         public WordleForm()
         {
             InitializeComponent();
+            InitCustomWord();
             testDisplay = new Display(InitDisplay());
             testBoard = new Keyboard(InitKeyboard());
             testWordle = new Wordle();
