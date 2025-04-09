@@ -204,6 +204,7 @@ namespace CSC_102_Project
         {
             
             InitializeComponent(testDisplay.DisplayLabels, testBoard.KeyboardLabels);
+            InitDisplay();
         }
 
         // Get Keyboard KeyStoke

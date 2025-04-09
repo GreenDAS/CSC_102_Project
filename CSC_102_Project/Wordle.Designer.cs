@@ -34,11 +34,14 @@ namespace CSC_102_Project
             // 
             // WordleForm
             // 
-            this.ClientSize = new System.Drawing.Size(1200, 900);
-            FurtherInit();
+            this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.ClientSize = new System.Drawing.Size(884, 711);
+            this.ForeColor = System.Drawing.SystemColors.Control;
+            this.MaximumSize = new System.Drawing.Size(900, 750);
+            this.MinimumSize = new System.Drawing.Size(900, 750);
             this.Name = "WordleForm";
+            this.Text = "Wordle";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -49,12 +52,13 @@ namespace CSC_102_Project
         // Coder Implemented Code
         //
         public System.Windows.Forms.Label[,] DisplayLabels = new System.Windows.Forms.Label[5, 6];
-        private void FurtherInit()
-        {
 
+        private System.Windows.Forms.Label[,] InitDisplay()
+        {
+            
             int xpad = 13;
             int ypad = 13;
-            int x = this.Width/2 - (5*(50+13))/2;
+            int x = this.Width/2 - ((5*(50+13))+13)/2;
             int y = 0;
 
             for (int i = 0; i < 5; i++)
@@ -80,7 +84,9 @@ namespace CSC_102_Project
 
                 
             }
+            return DisplayLabels;
         }
+
     }
 }
 
