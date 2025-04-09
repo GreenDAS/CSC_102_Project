@@ -214,7 +214,7 @@ namespace CSC_102_Project
         {
             if (lastKey != e.KeyChar.ToString().ToUpper())
             {
-                if (e.KeyChar == (char)Keys.Back)
+                if (e.KeyChar == (char)Keys.Back | (char)Keys.Delete == e.KeyChar)
                 {
                     testBoard.deletePressed();
                 }
@@ -249,15 +249,15 @@ namespace CSC_102_Project
         private void WordleForm_Keyboard_Click(object sender, EventArgs e)
         {
             Label clickedLabel = (Label)sender;
-            if (clickedLabel.Text == "Back")
+            if (clickedLabel.Text == "DEL")
             {
                 testBoard.deletePressed();
             }
-            else if (clickedLabel.Text == "Enter")
+            else if (clickedLabel.Text == "ENTER")
             {
                 testBoard.enterPressed(testWordle);
             }
-            else if (clickedLabel.Text == "Reset")
+            else if (clickedLabel.Text == "RESET")
             {
                 testBoard.resetPressed();
             }

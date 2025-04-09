@@ -53,7 +53,7 @@ namespace CSC_102_Project
         // Coder Implemented Code
         //
         public System.Windows.Forms.Label[,] DisplayLabels = new System.Windows.Forms.Label[5, 6];
-        public System.Windows.Forms.Label[][] KeyboardLabels = new System.Windows.Forms.Label[3][];
+        public System.Windows.Forms.Label[][] KeyboardLabels = new System.Windows.Forms.Label[4][];
 
         public System.Windows.Forms.Label[] KeyboardRow1 = new System.Windows.Forms.Label[10];
         public string KeyboardRow1LetterMap =  "QWERTYUIOP";
@@ -63,6 +63,9 @@ namespace CSC_102_Project
 
         public System.Windows.Forms.Label[] KeyboardRow3 = new System.Windows.Forms.Label[7];
         public string KeyboardRow3LetterMap = "ZXCVBNM";
+
+        public System.Windows.Forms.Label[] KeyboardSpecialKeys = new System.Windows.Forms.Label[3];
+        public string KeyboardSpecialKeysLetterMap = "ENTER,DEL,RESET";
 
         int xpad = 13;
         int ypad = 13;
@@ -142,11 +145,42 @@ namespace CSC_102_Project
             return KeyboardRow3;
         }
 
+
+        private System.Windows.Forms.Label[] InitKeyboardSpecialKeys()
+        {
+            int x = this.Width / 2 - ((3 * (150 + 13)) + 13) / 2;
+            int y = this.Height - ((300 - 13 * 3) - 50 * 3);
+            for (int i = 0; i < 3; i++)
+            {
+                this.KeyboardSpecialKeys[i] = new System.Windows.Forms.Label();
+                this.KeyboardSpecialKeys[i].Text = KeyboardSpecialKeysLetterMap.Split(',')[i].ToString();
+                this.KeyboardSpecialKeys[i].Name = $"Key {KeyboardSpecialKeysLetterMap.Split(',')[i]}";
+                this.KeyboardSpecialKeys[i].BackColor = Color.Black;
+                this.KeyboardSpecialKeys[i].ForeColor = Color.White;
+                this.KeyboardSpecialKeys[i].BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                this.KeyboardSpecialKeys[i].TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                this.KeyboardSpecialKeys[i].Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                this.KeyboardSpecialKeys[i].AutoSize = false;
+                this.KeyboardSpecialKeys[i].Location = new System.Drawing.Point(x + ((i + 1) * xpad), y);
+                this.KeyboardSpecialKeys[i].Size = new System.Drawing.Size(150, 50);
+                this.KeyboardSpecialKeys[i].Click += new System.EventHandler(this.WordleForm_Keyboard_Click);
+                this.Controls.Add(this.KeyboardSpecialKeys[i]);
+                x += 150;
+            }
+            return KeyboardSpecialKeys;
+        }
+
+
         private System.Windows.Forms.Label[][] InitKeyboard()
         {
             this.KeyboardLabels[0] = InitKeyboardRow1();
             this.KeyboardLabels[1] = InitKeyboardRow2();
             this.KeyboardLabels[2] = InitKeyboardRow3();
+            this.KeyboardLabels[3] = InitKeyboardSpecialKeys();
+            this.ResumeLayout(true);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.WordleForm_KeyPress);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.WordleForm_KeyUp);
+            this.ResumeLayout(false);
             return KeyboardLabels;
         }
 
