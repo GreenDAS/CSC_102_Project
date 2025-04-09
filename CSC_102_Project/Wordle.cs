@@ -18,7 +18,7 @@ namespace CSC_102_Project
         {
             static string currentGuess = string.Empty;
 
-            static int currentTimeGuessing = 1;
+            protected static int currentTimeGuessing = 1;
 
             public enum correctness
             {
@@ -83,7 +83,7 @@ namespace CSC_102_Project
 
         private class Keyboard : GuessHandler
         {
-            public static System.Windows.Forms.Label[][] KeyboardLabels;
+            protected static System.Windows.Forms.Label[][] KeyboardLabels;
 
             static string guessMade = string.Empty;
 
@@ -122,7 +122,7 @@ namespace CSC_102_Project
                 guessMade = string.Empty;
             }
 
-            public void enterPressed(Wordle wrdle)
+            public void enterPressed(Wordle wrdle, Display disp)
             {
 
                 wrdle.IsCorrect(guessMade);
@@ -148,7 +148,13 @@ namespace CSC_102_Project
                             break;
                         }
                     }
+
+                    // Find Display Label and Update Color
+                    disp.changeColor();
                 }
+                currentTimeGuessing++;
+
+
             }
 
             public void deletePressed()
@@ -190,7 +196,36 @@ namespace CSC_102_Project
         private class Display : Keyboard
         {
             public static Label[,] DisplayLabels;
-            
+
+
+            public void changeColor()
+            {
+                for (int i = 0; i < guessColorMap.Length; i++)
+                {
+                    Label LabelToUpdate = DisplayLabels[i, currentTimeGuessing - 1];
+                    switch (guessColorMap[i])
+                    {
+                        case correctness.notInWord:
+                            LabelToUpdate.BackColor = Color.FromArgb(200, 200, 200, 200);
+                            break;
+
+                        case correctness.inWord:
+                            LabelToUpdate.BackColor = Color.FromArgb(200, 222, 222, 33);
+                            break;
+
+                        case correctness.correctPlace:
+                            LabelToUpdate.BackColor = Color.FromArgb(200, 0, 255, 0);
+                            break;
+
+                        default:
+                            MessageBox.Show("No Known Correct Location Error");
+                            break;
+
+                    }
+                }
+                
+            }
+
             public Display(Label[,] dispLabels)
             {
                 DisplayLabels = dispLabels;
@@ -241,7 +276,7 @@ namespace CSC_102_Project
                 }
                 else if (e.KeyChar == (char)Keys.Enter)
                 {
-                    testBoard.enterPressed(testWordle);
+                    testBoard.enterPressed(testWordle, testDisplay);
                 }
                 else if (e.KeyChar == (char)Keys.Escape)
                 {
@@ -278,7 +313,7 @@ namespace CSC_102_Project
             }
             else if (clickedLabel.Text == "ENTER")
             {
-                testBoard.enterPressed(testWordle);
+                testBoard.enterPressed(testWordle, testDisplay);
             }
             else if (clickedLabel.Text == "RESET")
             {
