@@ -16,6 +16,15 @@ namespace CSC_102_Project
 
         private class GuessHandler
         {
+            // put outside of class to make it easier to access
+            protected const int GUESSES_ALLOWED = 6;
+
+            protected const int WORD_LENGTH = 5;
+
+            protected static string[] guessesMade = new string[GUESSES_ALLOWED];
+
+            protected static correctness[,] guessesMadeColorMap = new correctness[GUESSES_ALLOWED,WORD_LENGTH];
+
             protected static string currentGuess = string.Empty;
 
             protected static int currentTimeGuessing = 1;
@@ -37,15 +46,9 @@ namespace CSC_102_Project
         {
             private string correctWord = "APPLE";
 
-            public bool IsCorrect()
+            public void IsCorrect()
             {
-                bool errorFlag = false;
-                if (currentGuess.Length != correctWord.Length)
-                {
-                    MessageBox.Show("Word is not the correct length");
-                    errorFlag = true;
-                }
-                else if (correctWord.ToUpper() == currentGuess.ToUpper())
+                if (correctWord.ToUpper() == currentGuess.ToUpper())
                 {
                     for (int i = 0; i<5;  i++)
                     {
@@ -78,8 +81,6 @@ namespace CSC_102_Project
                         }
                     }
                 }
-                return errorFlag;
-
             }
 
             public void CustomWordEntered(string CustomWord)
@@ -138,40 +139,58 @@ namespace CSC_102_Project
 
             public void enterPressed(Wordle wrdle, Display disp)
             {
-                
-                bool errorFlag = wrdle.IsCorrect();
+
+                for (int i = 0; i < guessesMade.Length; i++)
+                {
+                    if (guessesMade[i] == currentGuess)
+                    {
+                        MessageBox.Show("Word Already Guessed");
+                        return;
+                    }
+                }
+                if (currentGuess.Length != 5)
+                {
+                    MessageBox.Show("Word is not the correct length");
+                    return;
+                }
+
+                wrdle.IsCorrect();
 
                 // Find Label and Update Color
-                if (!errorFlag)
+
+                bool labelFoundFlag = false;
+                for (int i = 0; i < currentGuess.Length; i++)
                 {
-                    bool labelFoundFlag = false;
-                    for (int i = 0; i < currentGuess.Length; i++)
+                    for (int j = 0; j < KeyboardLabels.Length; j++)
                     {
-                        for (int j = 0; j < KeyboardLabels.Length; j++)
+                        for (int k = 0; k < KeyboardLabels[j].Length; k++)
                         {
-                            for (int k = 0; k < KeyboardLabels[j].Length; k++)
+                            if (KeyboardLabels[j][k].Text.ToUpper() == currentGuess[i].ToString().ToUpper())
                             {
-                                if (KeyboardLabels[j][k].Text.ToUpper() == currentGuess[i].ToString().ToUpper())
-                                {
-                                    changeColor(KeyboardLabels[j][k], guessColorMap[i]);
-                                    labelFoundFlag = true;
-                                    break;
-                                }
-                            }
-                            if (labelFoundFlag)
-                            {
-                                labelFoundFlag = false;
+                                changeColor(KeyboardLabels[j][k], guessColorMap[i]);
+                                labelFoundFlag = true;
                                 break;
                             }
                         }
-
-                        // Find Display Label and Update Color
-                        disp.changeColor();
+                        if (labelFoundFlag)
+                        {
+                            labelFoundFlag = false;
+                            break;
+                        }
                     }
-                    currentTimeGuessing++;
-                    currentGuess = string.Empty;
                 }
 
+
+
+                // Find Display Label and Update Color
+                disp.changeColor();
+                guessesMade[currentTimeGuessing - 1] = currentGuess;
+                for (int i = 0; i < guessColorMap.Length; i++)
+                {
+                    guessesMadeColorMap[currentTimeGuessing - 1, i] = guessColorMap[i];
+                }
+                currentTimeGuessing++;
+                currentGuess = string.Empty;
             }
 
             public void deletePressed()
