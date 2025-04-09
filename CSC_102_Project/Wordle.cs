@@ -32,17 +32,18 @@ namespace CSC_102_Project
         }
 
 
+
         private class Wordle : GuessHandler
         {
-            string correctWord = string.Empty;
+            string correctWord = "APPLE";
 
             public void IsCorrect(string guess)
             {
                 if (correctWord.ToUpper() == guess.ToUpper())
                 {
-                    foreach (char c in guess)
+                    for (int i = 0; i<5;  i++)
                     {
-                        guessColorMap[c] = correctness.correctPlace;
+                        guessColorMap[i] = correctness.correctPlace;
                     }
                     //End Game
                 }
@@ -77,6 +78,8 @@ namespace CSC_102_Project
                 correctWord = CustomWord;
             }
         }
+
+
 
         private class Keyboard : GuessHandler
         {
@@ -121,7 +124,31 @@ namespace CSC_102_Project
 
             public void enterPressed(Wordle wrdle)
             {
+
                 wrdle.IsCorrect(guessMade);
+
+                // Find Label and Update Color
+                bool labelFoundFlag = false;
+                for (int i = 0; i < guessMade.Length; i++)
+                {
+                    for (int j = 0; j < KeyboardLabels.Length; j++)
+                    {
+                        for (int k = 0; k < KeyboardLabels[j].Length; k++)
+                        {
+                            if (KeyboardLabels[j][k].Text.ToUpper() == guessMade[i].ToString().ToUpper())
+                            {
+                                changeColor(KeyboardLabels[j][k], guessColorMap[i]);
+                                labelFoundFlag = true;
+                                break;
+                            }
+                        }
+                        if (labelFoundFlag)
+                        {
+                            labelFoundFlag = false;
+                            break;
+                        }
+                    }
+                }
             }
 
             public void deletePressed()
@@ -149,11 +176,16 @@ namespace CSC_102_Project
             {
                 KeyboardLabels = keyboardLabels;
             }
+
+
+
             public Keyboard()
             {
             }
 
         }
+
+
 
         private class Display : Keyboard
         {
@@ -166,7 +198,6 @@ namespace CSC_102_Project
 
 
         }
-
 
 
 
@@ -183,19 +214,23 @@ namespace CSC_102_Project
         //
 
 
+
         public WordleForm()
         {
             
             InitializeComponent();
             testDisplay = new Display(InitDisplay());
             testBoard = new Keyboard(InitKeyboard());
+            testWordle = new Wordle();
         }
-
 
 
 
         // Get Keyboard KeyStoke
         string lastKey;
+
+
+
         private void WordleForm_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (lastKey != e.KeyChar.ToString().ToUpper())
@@ -226,10 +261,12 @@ namespace CSC_102_Project
         }
 
 
+
         private void WordleForm_KeyUp(object sender, KeyEventArgs e)
         {
             lastKey = "";
         }
+
 
 
         private void WordleForm_Keyboard_Click(object sender, EventArgs e)
@@ -256,5 +293,8 @@ namespace CSC_102_Project
                 MessageBox.Show($"Form.KeyPress: '{testBoard.DegbugPrint}' pressed.");
             }
         }
+
+
+
     }
 }
