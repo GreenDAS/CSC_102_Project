@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace CSC_102_Project
 {
@@ -84,6 +85,7 @@ namespace CSC_102_Project
                 this.KeyboardRow1[i].AutoSize = false;
                 this.KeyboardRow1[i].Location = new System.Drawing.Point(x + ((i + 1) * xpad), y);
                 this.KeyboardRow1[i].Size = new System.Drawing.Size(50, 50);
+                this.KeyboardRow1[i].Click += new System.EventHandler(this.WordleForm_Keyboard_Click);
                 this.Controls.Add(this.KeyboardRow1[i]);
                 x += 50;
             }
@@ -108,6 +110,7 @@ namespace CSC_102_Project
                 this.KeyboardRow2[i].AutoSize = false;
                 this.KeyboardRow2[i].Location = new System.Drawing.Point(x + ((i + 1) * xpad), y);
                 this.KeyboardRow2[i].Size = new System.Drawing.Size(50, 50);
+                this.KeyboardRow2[i].Click += new System.EventHandler(this.WordleForm_Keyboard_Click);
                 this.Controls.Add(this.KeyboardRow2[i]);
                 x += 50;
             }
@@ -132,6 +135,7 @@ namespace CSC_102_Project
                 this.KeyboardRow3[i].AutoSize = false;
                 this.KeyboardRow3[i].Location = new System.Drawing.Point(x + ((i + 1) * xpad), y);
                 this.KeyboardRow3[i].Size = new System.Drawing.Size(50, 50);
+                this.KeyboardRow3[i].Click += new System.EventHandler(this.WordleForm_Keyboard_Click);
                 this.Controls.Add(this.KeyboardRow3[i]);
                 x += 50;
             }

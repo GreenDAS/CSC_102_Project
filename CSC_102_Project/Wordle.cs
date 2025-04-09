@@ -245,5 +245,30 @@ namespace CSC_102_Project
             lastKey = "";
         }
 
+
+        private void WordleForm_Keyboard_Click(object sender, EventArgs e)
+        {
+            Label clickedLabel = (Label)sender;
+            if (clickedLabel.Text == "Back")
+            {
+                testBoard.deletePressed();
+            }
+            else if (clickedLabel.Text == "Enter")
+            {
+                testBoard.enterPressed(testWordle);
+            }
+            else if (clickedLabel.Text == "Reset")
+            {
+                testBoard.resetPressed();
+            }
+            else
+            {
+                testBoard.keyPressed(clickedLabel.Text.ToUpper());
+            }
+            if (testBoard.DegbugPrint.Length == 5)
+            {
+                MessageBox.Show($"Form.KeyPress: '{testBoard.DegbugPrint}' pressed.");
+            }
+        }
     }
 }
