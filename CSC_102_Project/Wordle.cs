@@ -23,8 +23,6 @@ namespace CSC_102_Project
 
             protected static string[] guessesMade = new string[GUESSES_ALLOWED];
 
-            protected static correctness[,] guessesMadeColorMap = new correctness[GUESSES_ALLOWED,WORD_LENGTH];
-
             protected static string currentGuess = string.Empty;
 
             protected static int currentTimeGuessing = 1;
@@ -50,7 +48,7 @@ namespace CSC_102_Project
             {
                 if (correctWord.ToUpper() == currentGuess.ToUpper())
                 {
-                    for (int i = 0; i<5;  i++)
+                    for (int i = 0; i < 5; i++)
                     {
                         guessColorMap[i] = correctness.correctPlace;
                     }
@@ -86,6 +84,23 @@ namespace CSC_102_Project
             public void CustomWordEntered(string CustomWord)
             {
                 correctWord = CustomWord;
+            }
+
+
+
+            public void resetGame()
+            {
+                correctWord = "APPLE";
+                currentGuess = string.Empty;
+                for (int i = 0; i < guessesMade.Length; i++)
+                {
+                    guessesMade[i] = string.Empty;
+                }
+                for (int i = 0; i < guessColorMap.Length; i++)
+                {
+                    guessColorMap[i] = correctness.notInWord;
+                }
+                currentTimeGuessing = 1;
             }
         }
 
@@ -130,11 +145,12 @@ namespace CSC_102_Project
                 if (currentGuess.Length < 5) { currentGuess += Key; }
             }
 
-            public void resetPressed()
+            public void resetPressed(Wordle wrdl, Display disp)
             {
                 //reset Board and Grab new Wrd
+                wrdl.resetGame();
+                disp.refreshWholeDisplay();
 
-                currentGuess = string.Empty;
             }
 
             public void enterPressed(Wordle wrdle, Display disp)
@@ -185,10 +201,6 @@ namespace CSC_102_Project
                 // Find Display Label and Update Color
                 disp.changeColor();
                 guessesMade[currentTimeGuessing - 1] = currentGuess;
-                for (int i = 0; i < guessColorMap.Length; i++)
-                {
-                    guessesMadeColorMap[currentTimeGuessing - 1, i] = guessColorMap[i];
-                }
                 currentTimeGuessing++;
                 currentGuess = string.Empty;
             }
@@ -287,6 +299,28 @@ namespace CSC_102_Project
 
 
 
+            public void refreshWholeDisplay()
+            {
+                
+                for (int i = 0; i < DisplayLabels.GetLength(0); i++)
+                {
+                    for (int j = 0; j < DisplayLabels.GetLength(1) -1; j++)
+                    {
+                        DisplayLabels[j, i].BackColor = Color.FromArgb(0,0,0,0);
+                        DisplayLabels[j, i].Text = " ";
+                    }
+                }
+                for (int i = 0; i < KeyboardLabels.Length; i++)
+                {
+                    for (int j = 0; j < KeyboardLabels[i].Length; j++)
+                    {
+                        KeyboardLabels[i][j].BackColor = Color.FromArgb(0, 0, 0, 0);
+                    }
+                }
+                
+            }
+
+
             public Display(Label[,] dispLabels)
             {
                 DisplayLabels = dispLabels;
@@ -341,7 +375,7 @@ namespace CSC_102_Project
                 }
                 else if (e.KeyChar == (char)Keys.Escape)
                 {
-                    testBoard.resetPressed();
+                    testBoard.resetPressed(testWordle, testDisplay);
                 }
                 else
                 {
@@ -373,12 +407,13 @@ namespace CSC_102_Project
             }
             else if (clickedLabel.Text == "RESET")
             {
-                testBoard.resetPressed();
+                testBoard.resetPressed(testWordle, testDisplay);
             }
             else
             {
                 testBoard.keyPressed(clickedLabel.Text.ToUpper());
             }
+            testDisplay.updateDisplay();
         }
     }
 }
