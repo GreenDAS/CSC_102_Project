@@ -35,11 +35,17 @@ namespace CSC_102_Project
 
         private class Wordle : GuessHandler
         {
-            string correctWord = "APPLE";
+            private string correctWord = "APPLE";
 
-            public void IsCorrect(string guess)
+            public bool IsCorrect()
             {
-                if (correctWord.ToUpper() == guess.ToUpper())
+                bool errorFlag = false;
+                if (currentGuess.Length != correctWord.Length)
+                {
+                    MessageBox.Show("Word is not the correct length");
+                    errorFlag = true;
+                }
+                else if (correctWord.ToUpper() == currentGuess.ToUpper())
                 {
                     for (int i = 0; i<5;  i++)
                     {
@@ -51,14 +57,14 @@ namespace CSC_102_Project
                 {
                     for (int i = 0; i < correctWord.Length; i++)
                     {
-                        for (int i2 = 0; i2 < guess.Length; i2++)
+                        for (int i2 = 0; i2 < currentGuess.Length; i2++)
                         {
-                            if (correctWord.ToUpper()[i] == guess.ToUpper()[i])
+                            if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i])
                             {
                                 guessColorMap[i] = correctness.correctPlace;
                                 break;
                             }
-                            else if (correctWord.ToUpper()[i] == guess.ToUpper()[i2])
+                            else if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i2])
                             {
                                 guessColorMap[i] = correctness.inWord;
                                 break;
@@ -70,6 +76,7 @@ namespace CSC_102_Project
                         }
                     }
                 }
+                return errorFlag;
 
             }
 
@@ -122,36 +129,39 @@ namespace CSC_102_Project
 
             public void enterPressed(Wordle wrdle, Display disp)
             {
-
-                wrdle.IsCorrect(currentGuess);
+                
+                bool errorFlag = wrdle.IsCorrect();
 
                 // Find Label and Update Color
-                bool labelFoundFlag = false;
-                for (int i = 0; i < currentGuess.Length; i++)
+                if (!errorFlag)
                 {
-                    for (int j = 0; j < KeyboardLabels.Length; j++)
+                    bool labelFoundFlag = false;
+                    for (int i = 0; i < currentGuess.Length; i++)
                     {
-                        for (int k = 0; k < KeyboardLabels[j].Length; k++)
+                        for (int j = 0; j < KeyboardLabels.Length; j++)
                         {
-                            if (KeyboardLabels[j][k].Text.ToUpper() == currentGuess[i].ToString().ToUpper())
+                            for (int k = 0; k < KeyboardLabels[j].Length; k++)
                             {
-                                changeColor(KeyboardLabels[j][k], guessColorMap[i]);
-                                labelFoundFlag = true;
+                                if (KeyboardLabels[j][k].Text.ToUpper() == currentGuess[i].ToString().ToUpper())
+                                {
+                                    changeColor(KeyboardLabels[j][k], guessColorMap[i]);
+                                    labelFoundFlag = true;
+                                    break;
+                                }
+                            }
+                            if (labelFoundFlag)
+                            {
+                                labelFoundFlag = false;
                                 break;
                             }
                         }
-                        if (labelFoundFlag)
-                        {
-                            labelFoundFlag = false;
-                            break;
-                        }
-                    }
 
-                    // Find Display Label and Update Color
-                    disp.changeColor();
+                        // Find Display Label and Update Color
+                        disp.changeColor();
+                    }
+                    currentTimeGuessing++;
+                    currentGuess = string.Empty;
                 }
-                currentTimeGuessing++;
-                currentGuess = string.Empty;
 
             }
 
