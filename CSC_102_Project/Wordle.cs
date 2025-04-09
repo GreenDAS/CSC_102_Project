@@ -80,7 +80,7 @@ namespace CSC_102_Project
 
         private class Keyboard : GuessHandler
         {
-            public System.Windows.Forms.Label[][] KeyboardLabels;
+            public static System.Windows.Forms.Label[][] KeyboardLabels;
 
             static string guessMade = string.Empty;
 
@@ -145,35 +145,38 @@ namespace CSC_102_Project
                 }
             }
 
+            public Keyboard(Label[][] keyboardLabels)
+            {
+                KeyboardLabels = keyboardLabels;
+            }
             public Keyboard()
             {
-
             }
 
         }
 
         private class Display : Keyboard
         {
-            public Label[,] DisplayLabels;
+            public static Label[,] DisplayLabels;
             
-            public Display()
+            public Display(Label[,] dispLabels)
             {
-
+                DisplayLabels = dispLabels;
             }
 
 
-        }   
-    
-        
-        
+        }
+
+
+
 
         // 
         // Temp Code
         //
 
-        private readonly Keyboard testBoard = new Keyboard();
-        private readonly Display testDisplay = new Display();
-        private readonly Wordle testWordle = new Wordle();
+        private Keyboard testBoard;
+        private Display testDisplay;
+        private Wordle testWordle;
 
         //
         //
@@ -184,9 +187,12 @@ namespace CSC_102_Project
         {
             
             InitializeComponent();
-            InitDisplay();
-            InitKeyboard();
+            testDisplay = new Display(InitDisplay());
+            testBoard = new Keyboard(InitKeyboard());
         }
+
+
+
 
         // Get Keyboard KeyStoke
         string lastKey;
