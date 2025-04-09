@@ -53,10 +53,20 @@ namespace CSC_102_Project
         // Coder Implemented Code
         //
 
+
+
+        /// <summary>
+        /// The number of guesses allowed in the game & length of words allowed
+        /// </summary>
+        private const int GUESSES_ALLOWED = 6;
+
+        private const int WORD_LENGTH = 5;
+
+
         /// <summary>
         /// The display and keyboard labels for the wordle game
         /// </summary>
-        public System.Windows.Forms.Label[,] DisplayLabels = new System.Windows.Forms.Label[5, 6];
+        public System.Windows.Forms.Label[,] DisplayLabels = new System.Windows.Forms.Label[WORD_LENGTH, GUESSES_ALLOWED];
         public System.Windows.Forms.Label[][] KeyboardLabels = new System.Windows.Forms.Label[4][];
 
         public System.Windows.Forms.Label[] KeyboardRow1 = new System.Windows.Forms.Label[10];
@@ -230,12 +240,12 @@ namespace CSC_102_Project
         private System.Windows.Forms.Label[,] InitDisplay()
         {
             
-            int x = this.Width/2 - ((5*(50+13))+13)/2;
+            int x = this.Width/2 - ((WORD_LENGTH*(50+13))+13)/2;
             int y = 0;
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < WORD_LENGTH; i++)
             {
-                for (int j = 0; j < 6; j++)
+                for (int j = 0; j < GUESSES_ALLOWED; j++)
                 {
                     this.DisplayLabels[i, j] = new System.Windows.Forms.Label();
                     this.DisplayLabels[i, j].Text = " ";

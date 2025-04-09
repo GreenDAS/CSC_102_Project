@@ -17,9 +17,6 @@ namespace CSC_102_Project
         private class GuessHandler
         {
             // put outside of class to make it easier to access
-            protected const int GUESSES_ALLOWED = 6;
-
-            protected const int WORD_LENGTH = 5;
 
             protected static string[] guessesMade = new string[GUESSES_ALLOWED];
 
@@ -27,14 +24,14 @@ namespace CSC_102_Project
 
             protected static int currentTimeGuessing = 1;
 
-            public enum correctness
+            public enum Correctness
             {
                 notInWord = 0,
                 inWord = 1,
                 correctPlace = 2,
             }
 
-            public static correctness[] guessColorMap = new correctness[5];
+            public static Correctness[] guessColorMap = new Correctness[WORD_LENGTH];
 
         }
 
@@ -50,7 +47,7 @@ namespace CSC_102_Project
                 {
                     for (int i = 0; i < 5; i++)
                     {
-                        guessColorMap[i] = correctness.correctPlace;
+                        guessColorMap[i] = Correctness.correctPlace;
                     }
                     //End Game
                 }
@@ -58,24 +55,24 @@ namespace CSC_102_Project
                 {
                     for (int i = 0; i < guessColorMap.Length; i++)
                     {
-                        guessColorMap[i] = correctness.notInWord;
+                        guessColorMap[i] = Correctness.notInWord;
                     }
                     for (int i = 0; i < correctWord.Length; i++)
                     {
                         for (int i2 = 0; i2 < currentGuess.Length; i2++)
                         {
-                            if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i2] & correctness.inWord > guessColorMap[i2])
+                            if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i2] & Correctness.inWord > guessColorMap[i2])
                             {
-                                guessColorMap[i2] = correctness.inWord;
+                                guessColorMap[i2] = Correctness.inWord;
                             }
-                            else if (correctness.notInWord == guessColorMap[i2])
+                            else if (Correctness.notInWord == guessColorMap[i2])
                             {
-                                guessColorMap[i2] = correctness.notInWord;
+                                guessColorMap[i2] = Correctness.notInWord;
                             }
                         }
                         if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i])
                         {
-                            guessColorMap[i] = correctness.correctPlace;
+                            guessColorMap[i] = Correctness.correctPlace;
                         }
                     }
                 }
@@ -88,7 +85,7 @@ namespace CSC_102_Project
 
 
 
-            public void resetGame()
+            public void ResetGame()
             {
                 correctWord = "APPLE";
                 currentGuess = string.Empty;
@@ -98,7 +95,7 @@ namespace CSC_102_Project
                 }
                 for (int i = 0; i < guessColorMap.Length; i++)
                 {
-                    guessColorMap[i] = correctness.notInWord;
+                    guessColorMap[i] = Correctness.notInWord;
                 }
                 currentTimeGuessing = 1;
             }
@@ -110,26 +107,26 @@ namespace CSC_102_Project
         {
             protected static System.Windows.Forms.Label[][] KeyboardLabels;
 
-            public void changeColor(Label LabelToUpdate, correctness Correctness)
+            public void ChangeColor(Label LabelToUpdate, Correctness Correctness)
             {
                 
                 switch (Correctness)
                 {
-                    case correctness.notInWord:
+                    case Correctness.notInWord:
                         if (LabelToUpdate.BackColor != Color.FromArgb(200, 222, 222, 33) | LabelToUpdate.BackColor != Color.FromArgb(200, 0, 255, 0))
                         {
                             LabelToUpdate.BackColor = Color.FromArgb(200, 200, 200, 200);
                         }
                         break;
 
-                    case correctness.inWord:
+                    case Correctness.inWord:
                         if (LabelToUpdate.BackColor != Color.FromArgb(200, 0, 255, 0))
                         {
                             LabelToUpdate.BackColor = Color.FromArgb(200, 222, 222, 33);
                         }
                         break;
 
-                    case correctness.correctPlace:
+                    case Correctness.correctPlace:
                         LabelToUpdate.BackColor = Color.FromArgb(200, 0, 255, 0);
                         break;
 
@@ -140,20 +137,20 @@ namespace CSC_102_Project
                 }
             }
 
-            public void keyPressed(string Key)
+            public void KeyPressed(string Key)
             {
-                if (currentGuess.Length < 5) { currentGuess += Key; }
+                if (currentGuess.Length < WORD_LENGTH) { currentGuess += Key; }
             }
 
-            public void resetPressed(Wordle wrdl, Display disp)
+            public void ResetPressed(Wordle wrdl, Display disp)
             {
                 //reset Board and Grab new Wrd
-                wrdl.resetGame();
-                disp.refreshWholeDisplay();
+                wrdl.ResetGame();
+                disp.RefreshWholeDisplay();
 
             }
 
-            public void enterPressed(Wordle wrdle, Display disp)
+            public void EnterPressed(Wordle wrdle, Display disp)
             {
 
                 for (int i = 0; i < guessesMade.Length; i++)
@@ -164,7 +161,7 @@ namespace CSC_102_Project
                         return;
                     }
                 }
-                if (currentGuess.Length != 5)
+                if (currentGuess.Length != WORD_LENGTH)
                 {
                     MessageBox.Show("Word is not the correct length");
                     return;
@@ -183,7 +180,7 @@ namespace CSC_102_Project
                         {
                             if (KeyboardLabels[j][k].Text.ToUpper() == currentGuess[i].ToString().ToUpper())
                             {
-                                changeColor(KeyboardLabels[j][k], guessColorMap[i]);
+                                ChangeColor(KeyboardLabels[j][k], guessColorMap[i]);
                                 labelFoundFlag = true;
                                 break;
                             }
@@ -199,13 +196,13 @@ namespace CSC_102_Project
 
 
                 // Find Display Label and Update Color
-                disp.changeColor();
+                disp.ChangeColor();
                 guessesMade[currentTimeGuessing - 1] = currentGuess;
                 currentTimeGuessing++;
                 currentGuess = string.Empty;
             }
 
-            public void deletePressed()
+            public void DeletePressed()
             {
                 if (currentGuess.Length > 0)
                 {
@@ -213,7 +210,7 @@ namespace CSC_102_Project
                 }
             }
 
-            public void customWordEntered(Wordle wrdle, string CustomWrd)
+            public void CustomWordEntered(Wordle wrdle, string CustomWrd)
             {
                 wrdle.CustomWordEntered(CustomWrd);
             }
@@ -231,8 +228,6 @@ namespace CSC_102_Project
                 KeyboardLabels = keyboardLabels;
             }
 
-
-
             public Keyboard()
             {
             }
@@ -246,22 +241,22 @@ namespace CSC_102_Project
             public static Label[,] DisplayLabels;
 
 
-            public void changeColor()
+            public void ChangeColor()
             {
                 for (int i = 0; i < guessColorMap.Length; i++)
                 {
                     Label LabelToUpdate = DisplayLabels[i, currentTimeGuessing - 1];
                     switch (guessColorMap[i])
                     {
-                        case correctness.notInWord:
+                        case Correctness.notInWord:
                             LabelToUpdate.BackColor = Color.FromArgb(200, 200, 200, 200);
                             break;
 
-                        case correctness.inWord:
+                        case Correctness.inWord:
                             LabelToUpdate.BackColor = Color.FromArgb(200, 222, 222, 33);
                             break;
 
-                        case correctness.correctPlace:
+                        case Correctness.correctPlace:
                             LabelToUpdate.BackColor = Color.FromArgb(200, 0, 255, 0);
                             break;
 
@@ -275,11 +270,11 @@ namespace CSC_102_Project
             }
 
 
-            public void updateDisplay()
+            public void UpdateDisplay()
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < WORD_LENGTH; i++)
                 {
-                    if (currentTimeGuessing > 6)
+                    if (currentTimeGuessing > GUESSES_ALLOWED)
                     {
                         break;
                     }
@@ -299,7 +294,7 @@ namespace CSC_102_Project
 
 
 
-            public void refreshWholeDisplay()
+            public void RefreshWholeDisplay()
             {
                 
                 for (int i = 0; i < DisplayLabels.GetLength(0); i++)
@@ -347,7 +342,6 @@ namespace CSC_102_Project
 
         public WordleForm()
         {
-            
             InitializeComponent();
             testDisplay = new Display(InitDisplay());
             testBoard = new Keyboard(InitKeyboard());
@@ -367,21 +361,21 @@ namespace CSC_102_Project
             {
                 if (e.KeyChar == (char)Keys.Back | (char)Keys.Delete == e.KeyChar)
                 {
-                    testBoard.deletePressed();
+                    testBoard.DeletePressed();
                 }
                 else if (e.KeyChar == (char)Keys.Enter)
                 {
-                    testBoard.enterPressed(testWordle, testDisplay);
+                    testBoard.EnterPressed(testWordle, testDisplay);
                 }
                 else if (e.KeyChar == (char)Keys.Escape)
                 {
-                    testBoard.resetPressed(testWordle, testDisplay);
+                    testBoard.ResetPressed(testWordle, testDisplay);
                 }
                 else
                 {
-                    testBoard.keyPressed(e.KeyChar.ToString().ToUpper());
+                    testBoard.KeyPressed(e.KeyChar.ToString().ToUpper());
                 }
-                testDisplay.updateDisplay();
+                testDisplay.UpdateDisplay();
             }
         }
 
@@ -399,21 +393,21 @@ namespace CSC_102_Project
             Label clickedLabel = (Label)sender;
             if (clickedLabel.Text == "DEL")
             {
-                testBoard.deletePressed();
+                testBoard.DeletePressed();
             }
             else if (clickedLabel.Text == "ENTER")
             {
-                testBoard.enterPressed(testWordle, testDisplay);
+                testBoard.EnterPressed(testWordle, testDisplay);
             }
             else if (clickedLabel.Text == "RESET")
             {
-                testBoard.resetPressed(testWordle, testDisplay);
+                testBoard.ResetPressed(testWordle, testDisplay);
             }
             else
             {
-                testBoard.keyPressed(clickedLabel.Text.ToUpper());
+                testBoard.KeyPressed(clickedLabel.Text.ToUpper());
             }
-            testDisplay.updateDisplay();
+            testDisplay.UpdateDisplay();
         }
     }
 }
