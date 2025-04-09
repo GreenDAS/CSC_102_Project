@@ -80,7 +80,7 @@ namespace CSC_102_Project
 
         private class Keyboard : GuessHandler
         {
-            public System.Windows.Forms.Label[] KeyboardLabels = new System.Windows.Forms.Label[26];
+            public System.Windows.Forms.Label[][] KeyboardLabels;
 
             static string guessMade = string.Empty;
 
@@ -154,31 +154,11 @@ namespace CSC_102_Project
 
         private class Display : Keyboard
         {
-            public Label[,] DisplayLabels = new Label[5, 6];
+            public Label[,] DisplayLabels;
             
             public Display()
             {
-                int xpad = 13;
-                int ypad = 13;
-                int x = 0;
-                int y = 0;
-                for (int i = 0; i < 5; i++)
-                {
-                    for (int j = 0; j < 6; j++)
-                    {
-                        DisplayLabels[i, j] = new Label();
-                        DisplayLabels[i, j].Text = " ";
-                        DisplayLabels[i, j].BackColor = Color.Black;
-                        DisplayLabels[i, j].BackColor = Color.White;
-                        DisplayLabels[i, j].AutoSize = false;
-                        DisplayLabels[i, j].Size = new Size(50, 50);
-                        x += 50;
-                        
-                        DisplayLabels[i, j].Location = new Point(x + (i * xpad), y + (j * ypad));
 
-                    }
-                    y += 50;
-                }
             }
 
 
@@ -203,7 +183,7 @@ namespace CSC_102_Project
         public WordleForm()
         {
             
-            InitializeComponent(testDisplay.DisplayLabels, testBoard.KeyboardLabels);
+            InitializeComponent();
             InitDisplay();
             InitKeyboard();
         }

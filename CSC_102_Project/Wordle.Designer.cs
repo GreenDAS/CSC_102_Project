@@ -29,7 +29,7 @@ namespace CSC_102_Project
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent(System.Windows.Forms.Label[,] Display, System.Windows.Forms.Label[] Keyboard)
+        private void InitializeComponent()
         {
             this.SuspendLayout();
             // 
@@ -52,6 +52,10 @@ namespace CSC_102_Project
         //
         // Coder Implemented Code
         //
+
+        /// <summary>
+        /// The display and keyboard labels for the wordle game
+        /// </summary>
         public System.Windows.Forms.Label[,] DisplayLabels = new System.Windows.Forms.Label[5, 6];
         public System.Windows.Forms.Label[][] KeyboardLabels = new System.Windows.Forms.Label[4][];
 
@@ -67,9 +71,20 @@ namespace CSC_102_Project
         public System.Windows.Forms.Label[] KeyboardSpecialKeys = new System.Windows.Forms.Label[3];
         public string KeyboardSpecialKeysLetterMap = "ENTER,DEL,RESET";
 
+
+
+        /// <summary>
+        /// Padding for the labels
+        /// </summary>
         int xpad = 13;
         int ypad = 13;
 
+
+
+        /// <summary>
+        /// Initialize Row 1 of Keyboard
+        /// </summary>
+        /// <returns>Array of Row 1 Labels</returns>
         private System.Windows.Forms.Label[] InitKeyboardRow1()
         {
             
@@ -95,6 +110,12 @@ namespace CSC_102_Project
             return KeyboardRow1;
         }
 
+
+
+        /// <summary>
+        /// Initialize Row 2 of Keyboard
+        /// </summary>
+        /// <returns>Array of Row 2 Labels</returns>
         private System.Windows.Forms.Label[] InitKeyboardRow2()
         {
 
@@ -120,6 +141,12 @@ namespace CSC_102_Project
             return KeyboardRow2;
         }
 
+
+
+        /// <summary>
+        /// Initialize Row 3 of Keyboard
+        /// </summary>
+        /// <returns>Array of Row 3 Labels</returns>
         private System.Windows.Forms.Label[] InitKeyboardRow3()
         {
 
@@ -146,6 +173,11 @@ namespace CSC_102_Project
         }
 
 
+
+        /// <summary>
+        /// Initialize Row 4 of Keyboard
+        /// </summary>
+        /// <returns>Array of Row 4 Labels</returns>
         private System.Windows.Forms.Label[] InitKeyboardSpecialKeys()
         {
             int x = this.Width / 2 - ((3 * (150 + 13)) + 13) / 2;
@@ -171,6 +203,11 @@ namespace CSC_102_Project
         }
 
 
+
+        /// <summary>
+        /// Initialize Keyboard
+        /// </summary>
+        /// <returns>Jagged Array of KeyboardRows</returns>
         private System.Windows.Forms.Label[][] InitKeyboard()
         {
             this.KeyboardLabels[0] = InitKeyboardRow1();
@@ -185,6 +222,11 @@ namespace CSC_102_Project
         }
 
 
+
+        /// <summary>
+        /// Initialize Display
+        /// </summary>
+        /// <returns>MultiDim Array of Display Labels</returns>
         private System.Windows.Forms.Label[,] InitDisplay()
         {
             
