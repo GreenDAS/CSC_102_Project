@@ -409,5 +409,14 @@ namespace CSC_102_Project
             }
             testDisplay.UpdateDisplay();
         }
+
+
+
+        private void WordleForm_CustomWordButton_Click(object sender, EventArgs e)
+        {
+            //string customWord = Microsoft.VisualBasic.Interaction.InputBox("Enter a custom word", "Custom Word", "APPLE");
+            //testBoard.CustomWordEntered(testWordle, customWord);
+            //testDisplay.RefreshWholeDisplay();
+        }
     }
 }

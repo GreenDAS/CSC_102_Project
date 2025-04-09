@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace CSC_102_Project
 {
@@ -70,7 +71,7 @@ namespace CSC_102_Project
         public System.Windows.Forms.Label[][] KeyboardLabels = new System.Windows.Forms.Label[4][];
 
         public System.Windows.Forms.Label[] KeyboardRow1 = new System.Windows.Forms.Label[10];
-        public string KeyboardRow1LetterMap =  "QWERTYUIOP";
+        public string KeyboardRow1LetterMap = "QWERTYUIOP";
 
         public System.Windows.Forms.Label[] KeyboardRow2 = new System.Windows.Forms.Label[9];
         public string KeyboardRow2LetterMap = "ASDFGHJKL";
@@ -81,6 +82,12 @@ namespace CSC_102_Project
         public System.Windows.Forms.Label[] KeyboardSpecialKeys = new System.Windows.Forms.Label[3];
         public string KeyboardSpecialKeysLetterMap = "ENTER,DEL,RESET";
 
+        /// <summary>
+        /// The label and text box for the custom word input
+        /// </summary>
+        public System.Windows.Forms.Label CustomWordLabel = new System.Windows.Forms.Label();
+        public System.Windows.Forms.TextBox CustomWordtextBox = new System.Windows.Forms.TextBox();
+        public System.Windows.Forms.Button CustomWordButton = new System.Windows.Forms.Button();
 
 
         /// <summary>
@@ -97,7 +104,7 @@ namespace CSC_102_Project
         /// <returns>Array of Row 1 Labels</returns>
         private System.Windows.Forms.Label[] InitKeyboardRow1()
         {
-            
+
             int x = this.Width / 2 - ((10 * (50 + 13)) + 13) / 2;
             int y = this.Height - 300;
             for (int i = 0; i < 10; i++)
@@ -161,7 +168,7 @@ namespace CSC_102_Project
         {
 
             int x = this.Width / 2 - ((7 * (50 + 13)) + 13) / 2;
-            int y = this.Height - ((300 - 13*2) - 50*2);
+            int y = this.Height - ((300 - 13 * 2) - 50 * 2);
             for (int i = 0; i < 7; i++)
             {
                 this.KeyboardRow3[i] = new System.Windows.Forms.Label();
@@ -239,8 +246,8 @@ namespace CSC_102_Project
         /// <returns>MultiDim Array of Display Labels</returns>
         private System.Windows.Forms.Label[,] InitDisplay()
         {
-            
-            int x = this.Width/2 - ((WORD_LENGTH*(50+13))+13)/2;
+
+            int x = this.Width / 2 - ((WORD_LENGTH * (50 + 13)) + 13) / 2;
             int y = 0;
 
             for (int i = 0; i < WORD_LENGTH; i++)
@@ -255,8 +262,8 @@ namespace CSC_102_Project
                     this.DisplayLabels[i, j].TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
                     this.DisplayLabels[i, j].Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     this.DisplayLabels[i, j].AutoSize = false;
-                    
-                    this.DisplayLabels[i, j].Location = new System.Drawing.Point(x + ((i + 1) * xpad), y + ((j +1) * ypad));
+
+                    this.DisplayLabels[i, j].Location = new System.Drawing.Point(x + ((i + 1) * xpad), y + ((j + 1) * ypad));
                     this.DisplayLabels[i, j].Size = new System.Drawing.Size(50, 50);
                     this.Controls.Add(this.DisplayLabels[i, j]);
                     y += 50;
@@ -264,11 +271,30 @@ namespace CSC_102_Project
                 y = 0;
                 x += 50;
 
-                
+
             }
             return DisplayLabels;
         }
 
+
+
+        private System.Windows.Forms.TextBox InitCustomWord()
+        {
+
+
+            this.CustomWordLabel.Text = "Enter a custom word:";
+            this.CustomWordLabel.Location = new System.Drawing.Point(10, 10);
+            this.CustomWordLabel.AutoSize = true;
+            this.Controls.Add(this.CustomWordLabel);
+            this.CustomWordtextBox.Location = new System.Drawing.Point(10, 40);
+            this.CustomWordtextBox.Size = new System.Drawing.Size(200, 20);
+            this.Controls.Add(this.CustomWordtextBox);
+            this.CustomWordButton.Text = "Submit";
+            this.CustomWordButton.Location = new System.Drawing.Point(220, 40);
+            this.CustomWordButton.Click += new System.EventHandler(this.WordleForm_CustomWordButton_Click);
+            this.Controls.Add(this.CustomWordButton);
+            return CustomWordtextBox;
+        }
     }
 }
 
