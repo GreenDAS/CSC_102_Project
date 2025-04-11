@@ -56,15 +56,44 @@ namespace CSC_102_Project
                 }
                 else
                 {
+                    Dictionary<char, int> correctPlaces = new Dictionary<char, int>();
+                    foreach (char c in correctWord.ToUpper())
+                    {
+                        // Check each value nad check to see if the correct place has been found yet or not for this letter
+                        if (!correctPlaces.ContainsKey(c))
+                        {
+                            correctPlaces.Add(c, 1);
+                        }
+                        else
+                        {
+                            // If the letter is already in the dictionary, then increment the value by 1
+                            // This will allow us to keep track of how many times the letter appears in the word
+                            // This will also allow us to keep track of how many times the letter has been guessed
+                            // This will also allow us to keep track of how many times the letter has been guessed in the correct place
+                            correctPlaces[c]++;
+                        }
+                    }
                     for (int i = 0; i < guessColorMap.Length; i++)
                     {
                         guessColorMap[i] = Correctness.notInWord;
                     }
                     for (int i = 0; i < correctWord.Length; i++)
                     {
+                        if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i])
+                        {
+                            guessColorMap[i] = Correctness.correctPlace;
+                            correctPlaces[correctWord.ToUpper()[i]]--;
+                            continue;
+                        }
                         for (int i2 = 0; i2 < currentGuess.Length; i2++)
                         {
-                            if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i2] & Correctness.inWord > guessColorMap[i2])
+                            // If the letter is in the correct place, then skip this letter and move to the next one
+                            // This will prevent double counting letters that are in the correct place
+                            // This will also prevent double counting letters that are not in the correct place
+                            // This will also prevent double counting letters that are not in the word at all
+                            // This will also prevent double counting letters that are in the word but not in the correct place
+
+                            if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i2] & correctPlaces[correctWord.ToUpper()[i]] > 0)
                             {
                                 guessColorMap[i2] = Correctness.inWord;
                             }
@@ -73,10 +102,7 @@ namespace CSC_102_Project
                                 guessColorMap[i2] = Correctness.notInWord;
                             }
                         }
-                        if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i])
-                        {
-                            guessColorMap[i] = Correctness.correctPlace;
-                        }
+                        
                     }
                 }
             }
@@ -419,6 +445,8 @@ namespace CSC_102_Project
             }
             testDisplay.UpdateDisplay();
         }
+
+
 
         private void WordleForm_CustomWordEnableButton_Click(object sender, EventArgs e)
         {

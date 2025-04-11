@@ -297,7 +297,7 @@ namespace CSC_102_Project
             this.CustomWordtextBox.MaxLength = WORD_LENGTH;
             this.CustomWordtextBox.Enabled = true;
             this.CustomWordtextBox.AcceptsTab = false;
-            this.CustomWordtextBox.MaxLength = 0;
+            this.CustomWordtextBox.MaxLength = 1;
             this.Controls.Add(this.CustomWordtextBox);
 
             this.CustomWordEnableButton.Text = "Enable/Disable Custom Word";
