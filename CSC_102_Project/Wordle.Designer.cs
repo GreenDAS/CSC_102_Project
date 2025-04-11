@@ -37,7 +37,7 @@ namespace CSC_102_Project
             // WordleForm
             // 
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(900, 750);
+            this.ClientSize = new System.Drawing.Size(884, 711);
             this.ForeColor = System.Drawing.SystemColors.Control;
             this.MaximumSize = new System.Drawing.Size(900, 750);
             this.MinimumSize = new System.Drawing.Size(900, 750);
@@ -87,7 +87,8 @@ namespace CSC_102_Project
         /// </summary>
         public System.Windows.Forms.Label CustomWordLabel = new System.Windows.Forms.Label();
         public System.Windows.Forms.TextBox CustomWordtextBox = new System.Windows.Forms.TextBox();
-        public System.Windows.Forms.Button CustomWordButton = new System.Windows.Forms.Button();
+        public System.Windows.Forms.Label CustomWordEnableButton = new System.Windows.Forms.Label();
+        public System.Windows.Forms.Label CustomWordButton = new System.Windows.Forms.Label();
 
 
         /// <summary>
@@ -278,22 +279,44 @@ namespace CSC_102_Project
 
 
 
+        /// <summary>
+        /// Initialize the custom word input
+        /// </summary>
+        /// <returns>The Custom Word Text Box</returns>
         private System.Windows.Forms.TextBox InitCustomWord()
         {
-
+            this.KeyPreview = true;
 
             this.CustomWordLabel.Text = "Enter a custom word:";
-            this.CustomWordLabel.Location = new System.Drawing.Point(10, 10);
+            this.CustomWordLabel.Location = new System.Drawing.Point(13, 13);
             this.CustomWordLabel.AutoSize = true;
             this.Controls.Add(this.CustomWordLabel);
-            this.CustomWordtextBox.Location = new System.Drawing.Point(10, 40);
+
+            this.CustomWordtextBox.Location = new System.Drawing.Point(13, 70);
             this.CustomWordtextBox.Size = new System.Drawing.Size(200, 20);
+            this.CustomWordtextBox.MaxLength = WORD_LENGTH;
+            this.CustomWordtextBox.Enabled = false;
+            this.CustomWordtextBox.AcceptsTab = false;
             this.Controls.Add(this.CustomWordtextBox);
+
+            this.CustomWordEnableButton.Text = "Enable/Disable Custom Word";
+            this.CustomWordEnableButton.Location = new System.Drawing.Point(13, 40);
+            this.CustomWordEnableButton.Size = new System.Drawing.Size(200, 20);
+            this.CustomWordEnableButton.Click += new System.EventHandler(this.WordleForm_CustomWordEnableButton_Click);
+            this.CustomWordEnableButton.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.CustomWordEnableButton.TextAlign = ContentAlignment.MiddleCenter;
+            this.Controls.Add(this.CustomWordEnableButton);
+
             this.CustomWordButton.Text = "Submit";
-            this.CustomWordButton.Location = new System.Drawing.Point(10, 70);
+            this.CustomWordButton.Location = new System.Drawing.Point(13, 100);
             this.CustomWordButton.Size = new System.Drawing.Size(200, 20);
             this.CustomWordButton.Click += new System.EventHandler(this.WordleForm_CustomWordButton_Click);
+            this.CustomWordButton.Enabled = false;
+            this.CustomWordButton.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.CustomWordButton.TextAlign = ContentAlignment.MiddleCenter;
+            this.CustomWordButton.Visible = false;
             this.Controls.Add(this.CustomWordButton);
+
             return CustomWordtextBox;
         }
     }

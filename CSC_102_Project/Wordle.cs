@@ -411,7 +411,13 @@ namespace CSC_102_Project
             testDisplay.UpdateDisplay();
         }
 
-
+        private void WordleForm_CustomWordEnableButton_Click(object sender, EventArgs e)
+        {
+            this.KeyPreview = !this.KeyPreview;
+            CustomWordtextBox.Enabled = !CustomWordtextBox.Enabled;
+            CustomWordButton.Enabled = !CustomWordButton.Enabled;
+            CustomWordButton.Visible = !CustomWordButton.Visible;
+        }
 
         private void WordleForm_CustomWordButton_Click(object sender, EventArgs e)
         {
