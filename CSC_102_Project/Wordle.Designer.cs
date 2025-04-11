@@ -215,6 +215,7 @@ namespace CSC_102_Project
                 this.KeyboardSpecialKeys[i].Size = new System.Drawing.Size(150, 50);
                 this.KeyboardSpecialKeys[i].Click += new System.EventHandler(this.WordleForm_Keyboard_Click);
                 this.Controls.Add(this.KeyboardSpecialKeys[i]);
+                this.KeyPreview = true;
                 x += 150;
             }
             return KeyboardSpecialKeys;
@@ -285,7 +286,6 @@ namespace CSC_102_Project
         /// <returns>The Custom Word Text Box</returns>
         private System.Windows.Forms.TextBox InitCustomWord()
         {
-            this.KeyPreview = true;
 
             this.CustomWordLabel.Text = "Enter a custom word:";
             this.CustomWordLabel.Location = new System.Drawing.Point(13, 13);
@@ -295,8 +295,9 @@ namespace CSC_102_Project
             this.CustomWordtextBox.Location = new System.Drawing.Point(13, 70);
             this.CustomWordtextBox.Size = new System.Drawing.Size(200, 20);
             this.CustomWordtextBox.MaxLength = WORD_LENGTH;
-            this.CustomWordtextBox.Enabled = false;
+            this.CustomWordtextBox.Enabled = true;
             this.CustomWordtextBox.AcceptsTab = false;
+            this.CustomWordtextBox.MaxLength = 0;
             this.Controls.Add(this.CustomWordtextBox);
 
             this.CustomWordEnableButton.Text = "Enable/Disable Custom Word";

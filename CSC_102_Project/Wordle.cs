@@ -13,6 +13,8 @@ namespace CSC_102_Project
 {
     public partial class WordleForm : Form
     {
+        
+
 
         private class GuessHandler
         {
@@ -40,6 +42,7 @@ namespace CSC_102_Project
         private class Wordle : GuessHandler
         {
             private string correctWord = "APPLE";
+            public TextBox CustomWordTextBox;
 
             public void IsCorrect()
             {
@@ -98,6 +101,12 @@ namespace CSC_102_Project
                     guessColorMap[i] = Correctness.notInWord;
                 }
                 currentTimeGuessing = 1;
+            }
+
+
+            public Wordle(TextBox customWordTextBox)
+            {
+                CustomWordTextBox = customWordTextBox;
             }
         }
 
@@ -343,10 +352,10 @@ namespace CSC_102_Project
         public WordleForm()
         {
             InitializeComponent();
-            InitCustomWord();
+            
             testDisplay = new Display(InitDisplay());
             testBoard = new Keyboard(InitKeyboard());
-            testWordle = new Wordle();
+            testWordle = new Wordle(InitCustomWord());
         }
 
 
@@ -413,17 +422,29 @@ namespace CSC_102_Project
 
         private void WordleForm_CustomWordEnableButton_Click(object sender, EventArgs e)
         {
-            this.KeyPreview = !this.KeyPreview;
-            CustomWordtextBox.Enabled = !CustomWordtextBox.Enabled;
+            KeyPreview = true;
+            if (CustomWordtextBox.MaxLength == 5) 
+            {
+                CustomWordtextBox.MaxLength = 1;
+            }
+            else
+            {
+                CustomWordtextBox.MaxLength = 5;
+            }
+
+
             CustomWordButton.Enabled = !CustomWordButton.Enabled;
             CustomWordButton.Visible = !CustomWordButton.Visible;
         }
 
         private void WordleForm_CustomWordButton_Click(object sender, EventArgs e)
         {
-            //string customWord = Microsoft.VisualBasic.Interaction.InputBox("Enter a custom word", "Custom Word", "APPLE");
-            //testBoard.CustomWordEntered(testWordle, customWord);
-            //testDisplay.RefreshWholeDisplay();
+            string customWord = testWordle.CustomWordTextBox.Text.ToUpper();
+            testWordle.CustomWordTextBox.Text = string.Empty;
+            testWordle.ResetGame();
+            testBoard.CustomWordEntered(testWordle, customWord);
+            testDisplay.RefreshWholeDisplay();
+
         }
     }
 }
