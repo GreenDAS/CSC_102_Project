@@ -44,7 +44,7 @@ namespace CSC_102_Project
             private string correctWord = "APPLE";
             public TextBox CustomWordTextBox;
 
-            public void IsCorrect()
+            public bool IsCorrect()
             {
                 if (correctWord.ToUpper() == currentGuess.ToUpper())
                 {
@@ -52,7 +52,8 @@ namespace CSC_102_Project
                     {
                         guessColorMap[i] = Correctness.correctPlace;
                     }
-                    //End Game
+                    return true;
+
                 }
                 else
                 {
@@ -105,6 +106,7 @@ namespace CSC_102_Project
                         
                     }
                 }
+                return false;
             }
 
             public void CustomWordEntered(string CustomWord)
@@ -202,6 +204,7 @@ namespace CSC_102_Project
                     return;
                 }
 
+
                 wrdle.IsCorrect();
 
                 // Find Label and Update Color
@@ -232,6 +235,14 @@ namespace CSC_102_Project
 
                 // Find Display Label and Update Color
                 disp.ChangeColor();
+
+                if (wrdle.IsCorrect())
+                {
+                    MessageBox.Show($"You Win! The word was {currentGuess.ToUpper()}! \nClick 'OK' to Play Again!");
+                    ResetPressed(wrdle, disp);
+                    return;
+                }
+
                 guessesMade[currentTimeGuessing - 1] = currentGuess;
                 currentTimeGuessing++;
                 currentGuess = string.Empty;
@@ -336,7 +347,7 @@ namespace CSC_102_Project
                 {
                     for (int j = 0; j < DisplayLabels.GetLength(1) -1; j++)
                     {
-                        DisplayLabels[j, i].BackColor = Color.FromArgb(0,0,0,0);
+                        DisplayLabels[j, i].BackColor = Color.FromArgb(255,0,0,0);
                         DisplayLabels[j, i].Text = " ";
                     }
                 }
@@ -344,7 +355,7 @@ namespace CSC_102_Project
                 {
                     for (int j = 0; j < KeyboardLabels[i].Length; j++)
                     {
-                        KeyboardLabels[i][j].BackColor = Color.FromArgb(0, 0, 0, 0);
+                        KeyboardLabels[i][j].BackColor = Color.FromArgb(255, 0, 0, 0);
                     }
                 }
                 
