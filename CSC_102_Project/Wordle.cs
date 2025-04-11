@@ -343,9 +343,9 @@ namespace CSC_102_Project
             public void RefreshWholeDisplay()
             {
                 
-                for (int i = 0; i < DisplayLabels.GetLength(0); i++)
+                for (int i = 0; i < GUESSES_ALLOWED; i++)
                 {
-                    for (int j = 0; j < DisplayLabels.GetLength(1) -1; j++)
+                    for (int j = 0; j < WORD_LENGTH; j++)
                     {
                         DisplayLabels[j, i].BackColor = Color.FromArgb(255,0,0,0);
                         DisplayLabels[j, i].Text = " ";
