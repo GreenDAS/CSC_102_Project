@@ -24,6 +24,8 @@ namespace CSC_102_Project
 
             protected static string currentGuess = string.Empty;
 
+            protected static string currentTempCustomWord = string.Empty;
+
             protected static int currentTimeGuessing = 1;
 
             public enum Correctness
@@ -94,9 +96,10 @@ namespace CSC_102_Project
                             // This will also prevent double counting letters that are not in the word at all
                             // This will also prevent double counting letters that are in the word but not in the correct place
 
-                            if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i2] & correctPlaces[correctWord.ToUpper()[i]] > 0)
+                            if (correctWord.ToUpper()[i] == currentGuess.ToUpper()[i2] & correctPlaces[correctWord.ToUpper()[i]] > 0 & guessColorMap[i2] < Correctness.correctPlace)
                             {
                                 guessColorMap[i2] = Correctness.inWord;
+                                correctPlaces[correctWord.ToUpper()[i]]--;
                             }
                             else if (Correctness.notInWord == guessColorMap[i2])
                             {
@@ -174,9 +177,11 @@ namespace CSC_102_Project
                 }
             }
 
-            public void KeyPressed(string Key)
+            public void KeyPressed(string Key, bool IsCustomWordEnabled)
+            
             {
-                if (currentGuess.Length < WORD_LENGTH) { currentGuess += Key; }
+                if (currentGuess.Length < WORD_LENGTH & !IsCustomWordEnabled) { currentGuess += Key; }
+                else if (currentTempCustomWord.Length < WORD_LENGTH & IsCustomWordEnabled) { currentTempCustomWord += Key; }
             }
 
             public void ResetPressed(Wordle wrdl, Display disp)
@@ -187,25 +192,37 @@ namespace CSC_102_Project
 
             }
 
-            public void EnterPressed(Wordle wrdle, Display disp)
+            public void EnterPressed(Wordle wrdle, Display disp, bool IsCustomWordEnabled)
             {
-
-                for (int i = 0; i < guessesMade.Length; i++)
+                if (!IsCustomWordEnabled)
                 {
-                    if (guessesMade[i] == currentGuess)
+                    for (int i = 0; i < guessesMade.Length; i++)
                     {
-                        MessageBox.Show("Word Already Guessed");
+                        if (guessesMade[i] == currentGuess)
+                        {
+                            MessageBox.Show("Word Already Guessed");
+                            return;
+                        }
+                    }
+                    if (currentGuess.Length != WORD_LENGTH)
+                    {
+                        MessageBox.Show("Word is not the correct length");
                         return;
                     }
                 }
-                if (currentGuess.Length != WORD_LENGTH)
+                else
                 {
-                    MessageBox.Show("Word is not the correct length");
+                    if (currentGuess.Length != WORD_LENGTH)
+                    {
+                        MessageBox.Show("Word is not the correct length");
+                        return;
+                    }
+                    CustomWordEntered(wrdle, currentTempCustomWord);
                     return;
                 }
 
 
-                wrdle.IsCorrect();
+                    wrdle.IsCorrect();
 
                 // Find Label and Update Color
 
@@ -248,11 +265,27 @@ namespace CSC_102_Project
                 currentGuess = string.Empty;
             }
 
-            public void DeletePressed()
+            public void DeletePressed(bool IsCustomWordEnabled)
             {
-                if (currentGuess.Length > 0)
+                if (currentGuess.Length > 0 & !IsCustomWordEnabled)
                 {
                     currentGuess = currentGuess.Remove(currentGuess.Length - 1);
+                }
+                else if (currentTempCustomWord.Length > 0 & IsCustomWordEnabled)
+                {
+                    currentTempCustomWord = currentTempCustomWord.Remove(currentTempCustomWord.Length - 1);
+                }
+            }
+
+            public void ClearPressed(bool IsCustomWordEnabled)
+            {
+                if (!IsCustomWordEnabled)
+                {
+                    currentGuess = string.Empty;
+                }
+                else
+                {
+                    currentTempCustomWord = string.Empty;
                 }
             }
 
@@ -339,6 +372,12 @@ namespace CSC_102_Project
             }
 
 
+            public void UpdateDisplay(TextBox customWordTextBox)
+            {
+                customWordTextBox.Text = currentTempCustomWord;
+            }
+
+
 
             public void RefreshWholeDisplay()
             {
@@ -399,20 +438,24 @@ namespace CSC_102_Project
 
         // Get Keyboard KeyStoke
         string lastKey;
-
+        bool isCustomWordEnabled = false;
 
 
         private void WordleForm_KeyPress(object sender, KeyPressEventArgs e)
         {
+            if (e.KeyChar == (char)Keys.Space)
+            {
+                return;
+            }
             if (lastKey != e.KeyChar.ToString().ToUpper())
             {
                 if (e.KeyChar == (char)Keys.Back | (char)Keys.Delete == e.KeyChar)
                 {
-                    testBoard.DeletePressed();
+                    testBoard.DeletePressed(isCustomWordEnabled);
                 }
                 else if (e.KeyChar == (char)Keys.Enter)
                 {
-                    testBoard.EnterPressed(testWordle, testDisplay);
+                    testBoard.EnterPressed(testWordle, testDisplay, isCustomWordEnabled);
                 }
                 else if (e.KeyChar == (char)Keys.Escape)
                 {
@@ -420,9 +463,14 @@ namespace CSC_102_Project
                 }
                 else
                 {
-                    testBoard.KeyPressed(e.KeyChar.ToString().ToUpper());
+                    testBoard.KeyPressed(e.KeyChar.ToString().ToUpper(), isCustomWordEnabled);
                 }
-                testDisplay.UpdateDisplay();
+                if (isCustomWordEnabled) { testDisplay.UpdateDisplay(testWordle.CustomWordTextBox);
+                }
+                else
+                {
+                    testDisplay.UpdateDisplay();
+                }
             }
         }
 
@@ -438,13 +486,18 @@ namespace CSC_102_Project
         private void WordleForm_Keyboard_Click(object sender, EventArgs e)
         {
             Label clickedLabel = (Label)sender;
+
             if (clickedLabel.Text == "DEL")
             {
-                testBoard.DeletePressed();
+                testBoard.DeletePressed(isCustomWordEnabled);
             }
             else if (clickedLabel.Text == "ENTER")
             {
-                testBoard.EnterPressed(testWordle, testDisplay);
+                testBoard.EnterPressed(testWordle, testDisplay, isCustomWordEnabled);
+            }
+            else if (clickedLabel.Text == "CLEAR")
+            {
+                testBoard.ClearPressed(isCustomWordEnabled);
             }
             else if (clickedLabel.Text == "RESET")
             {
@@ -452,12 +505,20 @@ namespace CSC_102_Project
             }
             else
             {
-                testBoard.KeyPressed(clickedLabel.Text.ToUpper());
+                testBoard.KeyPressed(clickedLabel.Text.ToUpper(), isCustomWordEnabled);
             }
-            testDisplay.UpdateDisplay();
+            if (isCustomWordEnabled)
+            {
+                testDisplay.UpdateDisplay(testWordle.CustomWordTextBox);
+            }
+            else
+            {
+                testDisplay.UpdateDisplay();
+            }
         }
 
 
+        
 
         private void WordleForm_CustomWordEnableButton_Click(object sender, EventArgs e)
         {
@@ -471,13 +532,23 @@ namespace CSC_102_Project
                 CustomWordtextBox.MaxLength = 5;
             }
 
-
+            CustomWordtextBox.Visible = !CustomWordtextBox.Visible;
+            isCustomWordEnabled = !isCustomWordEnabled;
             CustomWordButton.Enabled = !CustomWordButton.Enabled;
             CustomWordButton.Visible = !CustomWordButton.Visible;
         }
 
         private void WordleForm_CustomWordButton_Click(object sender, EventArgs e)
         {
+            if (CustomWordtextBox.Text.Length != 5)
+            {
+                MessageBox.Show("Word is not the correct length");
+                return;
+            }
+            CustomWordtextBox.Visible = !CustomWordtextBox.Visible;
+            isCustomWordEnabled = !isCustomWordEnabled;
+            CustomWordButton.Enabled = !CustomWordButton.Enabled;
+            CustomWordButton.Visible = !CustomWordButton.Visible;
             string customWord = testWordle.CustomWordTextBox.Text.ToUpper();
             testWordle.CustomWordTextBox.Text = string.Empty;
             testWordle.ResetGame();

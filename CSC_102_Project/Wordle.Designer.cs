@@ -79,8 +79,8 @@ namespace CSC_102_Project
         public System.Windows.Forms.Label[] KeyboardRow3 = new System.Windows.Forms.Label[7];
         public string KeyboardRow3LetterMap = "ZXCVBNM";
 
-        public System.Windows.Forms.Label[] KeyboardSpecialKeys = new System.Windows.Forms.Label[3];
-        public string KeyboardSpecialKeysLetterMap = "ENTER,DEL,RESET";
+        public System.Windows.Forms.Label[] KeyboardSpecialKeys = new System.Windows.Forms.Label[4];
+        public string KeyboardSpecialKeysLetterMap = "ENTER,DEL,CLEAR,RESET";
 
         /// <summary>
         /// The label and text box for the custom word input
@@ -204,7 +204,7 @@ namespace CSC_102_Project
             {
                 this.KeyboardSpecialKeys[i] = new System.Windows.Forms.Label();
                 this.KeyboardSpecialKeys[i].Text = KeyboardSpecialKeysLetterMap.Split(',')[i].ToString();
-                this.KeyboardSpecialKeys[i].Name = $"Key {KeyboardSpecialKeysLetterMap.Split(',')[i]}";
+                this.KeyboardSpecialKeys[i].Name = $"Key{KeyboardSpecialKeysLetterMap.Split(',')[i]}";
                 this.KeyboardSpecialKeys[i].BackColor = Color.Black;
                 this.KeyboardSpecialKeys[i].ForeColor = Color.White;
                 this.KeyboardSpecialKeys[i].BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -218,6 +218,20 @@ namespace CSC_102_Project
                 this.KeyPreview = true;
                 x += 150;
             }
+            x = this.Width / 2 - (((WORD_LENGTH * (50 + 13)) + 13) / 2) + (50+13)*(WORD_LENGTH);
+            this.KeyboardSpecialKeys[3] = new System.Windows.Forms.Label();
+            this.KeyboardSpecialKeys[3].Text = "RESET";
+            this.KeyboardSpecialKeys[3].Name = "KeyRESET";
+            this.KeyboardSpecialKeys[3].BackColor = Color.Black;
+            this.KeyboardSpecialKeys[3].ForeColor = Color.White;
+            this.KeyboardSpecialKeys[3].BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.KeyboardSpecialKeys[3].TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.KeyboardSpecialKeys[3].Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.KeyboardSpecialKeys[3].AutoSize = false;
+            this.KeyboardSpecialKeys[3].Location = new System.Drawing.Point(x+xpad, ypad);
+            this.KeyboardSpecialKeys[3].Size = new System.Drawing.Size(150, 50);
+            this.KeyboardSpecialKeys[3].Click += new System.EventHandler(this.WordleForm_Keyboard_Click);
+            this.Controls.Add(this.KeyboardSpecialKeys[3]);
             return KeyboardSpecialKeys;
         }
 
@@ -295,9 +309,10 @@ namespace CSC_102_Project
             this.CustomWordtextBox.Location = new System.Drawing.Point(13, 70);
             this.CustomWordtextBox.Size = new System.Drawing.Size(200, 20);
             this.CustomWordtextBox.MaxLength = WORD_LENGTH;
-            this.CustomWordtextBox.Enabled = true;
+            this.CustomWordtextBox.Enabled = false;
             this.CustomWordtextBox.AcceptsTab = false;
             this.CustomWordtextBox.MaxLength = 1;
+            this.CustomWordtextBox.Visible = false;
             this.Controls.Add(this.CustomWordtextBox);
 
             this.CustomWordEnableButton.Text = "Enable/Disable Custom Word";
