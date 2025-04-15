@@ -50,18 +50,15 @@ namespace CSC_102_Project
         #endregion
 
 
-        //
-        // Coder Implemented Code
-        //
 
-
-
+        #region Coder Implemented Code
         /// <summary>
         /// The number of guesses allowed in the game & length of words allowed
         /// </summary>
         private const int GUESSES_ALLOWED = 6;
 
         private const int WORD_LENGTH = 5;
+
 
 
         /// <summary>
@@ -82,12 +79,16 @@ namespace CSC_102_Project
         public System.Windows.Forms.Label[] KeyboardSpecialKeys = new System.Windows.Forms.Label[5];
         public string KeyboardSpecialKeysLetterMap = "ENTER,DEL,CLEAR,RESET,LOAD";
 
+
+
         /// <summary>
         /// The score labels for the game
         /// [0,X] = Text for Telling Wins/Losses
         /// [1,X] = Win/Loss Score
         /// </summary>
         public System.Windows.Forms.Label[,] ScoreLabels = new System.Windows.Forms.Label[2,2];
+
+
 
         /// <summary>
         /// The label and text box for the custom word input
@@ -96,6 +97,7 @@ namespace CSC_102_Project
         public System.Windows.Forms.TextBox CustomWordtextBox = new System.Windows.Forms.TextBox();
         public System.Windows.Forms.Label CustomWordEnableButton = new System.Windows.Forms.Label();
         public System.Windows.Forms.Label CustomWordButton = new System.Windows.Forms.Label();
+
 
 
         /// <summary>
@@ -409,6 +411,8 @@ namespace CSC_102_Project
 
             return CustomWordtextBox;
         }
+
+        #endregion
     }
 }
 

@@ -16,6 +16,7 @@ namespace CSC_102_Project
 
 
 
+        #region Class Delcarations
         /// <summary>
         /// GuessHandler Class
         /// Defines static variables that all other classes can access
@@ -47,7 +48,7 @@ namespace CSC_102_Project
         }
 
 
-
+        
         /// <summary>
         /// Wordle Class
         /// Handles all the guessing logic and communicating with the Filemanager
@@ -454,15 +455,32 @@ namespace CSC_102_Project
 
 
         }
+        #endregion
 
 
 
+        #region Form Variables
         /// <summary>
         /// Init Display, Keyboard, and Wordle Vars
         /// </summary>
         private Keyboard testBoard;
         private Display testDisplay;
         private Wordle testWordle;
+
+
+
+        /// <summary>
+        /// Last Keyboard KeyStoke
+        /// </summary>
+        string lastKey;
+
+
+
+        /// <summary>
+        /// Is a Cutom Word being Entered
+        /// </summary>
+        bool isCustomWordEnabled = false;
+        #endregion
 
 
 
@@ -480,16 +498,7 @@ namespace CSC_102_Project
 
 
 
-        // Get Keyboard KeyStoke
-        string lastKey;
-
-
-
-        // Is a Cutom Word being Entered
-        bool isCustomWordEnabled = false;
-
-
-
+        #region Keyboard Key Press Event Handlers
         /// <summary>
         /// Key Press Event Handler
         /// Checks to see if the key pressed is a special key or a letter and clals the appropriate method
@@ -532,7 +541,7 @@ namespace CSC_102_Project
         }
 
 
-
+        
         /// <summary>
         /// Key Up Event Handler
         /// Checks to see if the key has been released (denotes a click of a key)
@@ -593,6 +602,7 @@ namespace CSC_102_Project
                 testDisplay.UpdateDisplay();
             }
         }
+        #endregion
 
 
 
@@ -610,6 +620,7 @@ namespace CSC_102_Project
 
 
 
+        #region CustomWord Event Hanldlers
         /// <summary>
         /// Tells the Program that the user is typig in a custom word
         /// </summary>
@@ -652,5 +663,6 @@ namespace CSC_102_Project
             testDisplay.RefreshWholeDisplay();
 
         }
+        #endregion
     }
 }
