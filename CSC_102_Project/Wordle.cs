@@ -190,7 +190,9 @@ namespace CSC_102_Project
         /// </summary>
         private class Keyboard : GuessHandler
         {
-            protected static System.Windows.Forms.Label[][] KeyboardLabels;
+            private Label LossMessageLabel;
+
+            protected static Label[][] KeyboardLabels;
 
             #region Key Press Methods
             /// <summary>
@@ -250,6 +252,10 @@ namespace CSC_102_Project
             public void ResetPressed(Wordle wrdl, Display disp)
             {
                 //reset Board and Grab new Wrd
+                if (LossMessageLabel != null)
+                {
+                    LossMessageLabel.Visible = false;
+                }
                 wrdl.DebugResetGame();
                 disp.RefreshWholeDisplay();
                 currentTempCustomWord = string.Empty;
@@ -264,6 +270,10 @@ namespace CSC_102_Project
             public void LoadPressed(Wordle wrdl, Display disp)
             {
                 //Load new Wrd
+                if (LossMessageLabel != null)
+                {
+                    LossMessageLabel.Visible = false;
+                }
                 wrdl.DebugResetGame();
                 wrdl.LoadNewWord();
                 disp.RefreshWholeDisplay();
@@ -304,9 +314,7 @@ namespace CSC_102_Project
                         return;
                     }
                     CustomWordEntered(wrdle, currentTempCustomWord);
-                    currentTempCustomWord = string.Empty;
-
-
+                    ResetPressed(wrdle, disp);
                     return;
                 }
 
@@ -350,6 +358,10 @@ namespace CSC_102_Project
                 }
                 else if (currentTimeGuessing >= GUESSES_ALLOWED & !guessIsCorrect)
                 {
+                    if (LossMessageLabel != null)
+                    {
+                        LossMessageLabel.Visible = true;
+                    }
                     MessageBox.Show($"You Lose! The word was {currentGuess.ToUpper()}! \nClick 'OK' to Play Again!");
                     timesLost++;
                     return;
@@ -407,6 +419,17 @@ namespace CSC_102_Project
             #endregion
 
             #region Constructors
+            /// <summary>
+            /// Keyboard Constructor
+            /// </summary>
+            /// <param name="keyboardLabels"></param>
+            public Keyboard(Label lossMsgLabel, Label[][] keyboardLabels)
+            {
+                KeyboardLabels = keyboardLabels;
+                LossMessageLabel = lossMsgLabel;
+            }
+
+
             /// <summary>
             /// Keyboard Constructor
             /// </summary>
@@ -578,10 +601,11 @@ namespace CSC_102_Project
         public WordleForm()
         {
             InitializeComponent();
-            
-            testDisplay = new Display(InitDisplay(), InitScoreBoard());
+
             testBoard = new Keyboard(InitKeyboard());
+            testDisplay = new Display(InitDisplay(), InitScoreBoard());
             testWordle = new Wordle(InitCustomWord());
+            
         }
         #endregion
 
@@ -599,6 +623,14 @@ namespace CSC_102_Project
             {
                 return;
             }
+            foreach (char c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToLower())
+            {
+                if (e.KeyChar == c & lastKey != e.KeyChar.ToString().ToUpper())
+                {
+                    testBoard.KeyPressed(e.KeyChar.ToString().ToUpper(), isCustomWordEnabled);
+                    break;
+                }
+            }
             if (lastKey != e.KeyChar.ToString().ToUpper())
             {
                 if (e.KeyChar == (char)Keys.Back | (char)Keys.Delete == e.KeyChar)
@@ -615,11 +647,9 @@ namespace CSC_102_Project
                     testBoard.ResetPressed(testWordle, testDisplay);
                     if (isCustomWordEnabled) { ToggleCustomControls(); }
                 }
-                else
+                if (isCustomWordEnabled) 
                 {
-                    testBoard.KeyPressed(e.KeyChar.ToString().ToUpper(), isCustomWordEnabled);
-                }
-                if (isCustomWordEnabled) { testDisplay.UpdateDisplay(testWordle.CustomWordTextBox);
+                    testDisplay.UpdateDisplay(testWordle.CustomWordTextBox);
                 }
                 else
                 {

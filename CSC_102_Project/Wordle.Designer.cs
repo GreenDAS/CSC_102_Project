@@ -79,6 +79,8 @@ namespace CSC_102_Project
         public string KeyboardSpecialKeysLetterMap = "ENTER,DEL,CLEAR,RESET,LOAD";
 
 
+        // public System.Windows.Forms.Label LossLabelOverlay = new System.Windows.Forms.Label();
+
 
         /// <summary>
         /// The score labels for the game
@@ -411,6 +413,23 @@ namespace CSC_102_Project
             return CustomWordtextBox;
         }
 
+        /*
+        private System.Windows.Forms.Label InitLossLabelOverlay()
+        {
+            this.LossLabelOverlay.Text = "You Lose!";
+            this.LossLabelOverlay.BackColor = Color.FromArgb(80,255,0,0);
+            this.LossLabelOverlay.ForeColor = Color.White;
+            this.LossLabelOverlay.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LossLabelOverlay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LossLabelOverlay.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LossLabelOverlay.AutoSize = false;
+            this.LossLabelOverlay.Visible = false;
+            this.LossLabelOverlay.Location = new System.Drawing.Point(0,0);
+            this.LossLabelOverlay.Size = new System.Drawing.Size(this.Width, this.Height);
+            this.Controls.Add(this.LossLabelOverlay);
+            return LossLabelOverlay;
+        }
+        */
         #endregion
 
 
