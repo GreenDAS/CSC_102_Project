@@ -79,8 +79,8 @@ namespace CSC_102_Project
         public System.Windows.Forms.Label[] KeyboardRow3 = new System.Windows.Forms.Label[7];
         public string KeyboardRow3LetterMap = "ZXCVBNM";
 
-        public System.Windows.Forms.Label[] KeyboardSpecialKeys = new System.Windows.Forms.Label[4];
-        public string KeyboardSpecialKeysLetterMap = "ENTER,DEL,CLEAR,RESET";
+        public System.Windows.Forms.Label[] KeyboardSpecialKeys = new System.Windows.Forms.Label[5];
+        public string KeyboardSpecialKeysLetterMap = "ENTER,DEL,CLEAR,RESET,LOAD";
 
         /// <summary>
         /// The label and text box for the custom word input
@@ -232,6 +232,21 @@ namespace CSC_102_Project
             this.KeyboardSpecialKeys[3].Size = new System.Drawing.Size(150, 50);
             this.KeyboardSpecialKeys[3].Click += new System.EventHandler(this.WordleForm_Keyboard_Click);
             this.Controls.Add(this.KeyboardSpecialKeys[3]);
+
+            y = (50 + ypad);
+            this.KeyboardSpecialKeys[4] = new System.Windows.Forms.Label();
+            this.KeyboardSpecialKeys[4].Text = "LOAD";
+            this.KeyboardSpecialKeys[4].Name = "KeyLOAD";
+            this.KeyboardSpecialKeys[4].BackColor = Color.Black;
+            this.KeyboardSpecialKeys[4].ForeColor = Color.White;
+            this.KeyboardSpecialKeys[4].BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.KeyboardSpecialKeys[4].TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.KeyboardSpecialKeys[4].Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.KeyboardSpecialKeys[4].AutoSize = false;
+            this.KeyboardSpecialKeys[4].Location = new System.Drawing.Point(x + xpad, y + ypad);
+            this.KeyboardSpecialKeys[4].Size = new System.Drawing.Size(150, 50);
+            this.KeyboardSpecialKeys[4].Click += new System.EventHandler(this.WordleForm_Keyboard_Click);
+            this.Controls.Add(this.KeyboardSpecialKeys[4]);
             return KeyboardSpecialKeys;
         }
 

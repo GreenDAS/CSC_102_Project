@@ -119,9 +119,8 @@ namespace CSC_102_Project
 
 
 
-            public void ResetGame()
+            public void DebugResetGame()
             {
-                correctWord = "APPLE";
                 currentGuess = string.Empty;
                 for (int i = 0; i < guessesMade.Length; i++)
                 {
@@ -134,6 +133,10 @@ namespace CSC_102_Project
                 currentTimeGuessing = 1;
             }
 
+            public void LoardNewWord()
+            {
+                // Load new word from file
+            }
 
             public Wordle(TextBox customWordTextBox)
             {
@@ -187,7 +190,16 @@ namespace CSC_102_Project
             public void ResetPressed(Wordle wrdl, Display disp)
             {
                 //reset Board and Grab new Wrd
-                wrdl.ResetGame();
+                wrdl.DebugResetGame();
+                disp.RefreshWholeDisplay();
+                currentTempCustomWord = string.Empty;
+            }
+
+            public void LoadPressed(Wordle wrdl, Display disp)
+            {
+                //Load new Wrd
+                wrdl.DebugResetGame();
+                wrdl.LoardNewWord();
                 disp.RefreshWholeDisplay();
                 currentTempCustomWord = string.Empty;
             }
@@ -511,6 +523,11 @@ namespace CSC_102_Project
                 if (isCustomWordEnabled) { ToggleCustomControls(); }
 
             }
+            else if (clickedLabel.Text == "LOAD")
+            {
+                testBoard.LoadPressed(testWordle, testDisplay);
+                if (isCustomWordEnabled) { ToggleCustomControls(); }
+            }
             else
             {
                 testBoard.KeyPressed(clickedLabel.Text.ToUpper(), isCustomWordEnabled);
@@ -561,7 +578,7 @@ namespace CSC_102_Project
             ToggleCustomControls();
             string customWord = testWordle.CustomWordTextBox.Text.ToUpper();
             testWordle.CustomWordTextBox.Text = string.Empty;
-            testWordle.ResetGame();
+            testWordle.DebugResetGame();
             testBoard.CustomWordEntered(testWordle, customWord);
             testDisplay.RefreshWholeDisplay();
 
