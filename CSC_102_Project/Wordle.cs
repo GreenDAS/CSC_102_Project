@@ -17,6 +17,7 @@ namespace CSC_102_Project
 
 
         #region Class Delcarations
+        #region GuessHandler Class
         /// <summary>
         /// GuessHandler Class
         /// Defines static variables that all other classes can access
@@ -46,9 +47,10 @@ namespace CSC_102_Project
             public static Correctness[] guessColorMap = new Correctness[WORD_LENGTH];
 
         }
+        #endregion
 
 
-        
+        #region Wordle Class
         /// <summary>
         /// Wordle Class
         /// Handles all the guessing logic and communicating with the Filemanager
@@ -157,9 +159,10 @@ namespace CSC_102_Project
                 CustomWordTextBox = customWordTextBox;
             }
         }
+        #endregion
 
 
-
+        #region Keyboard Class
         /// <summary>
         /// Keyboard Class
         /// Handles all keypresses and update the keyboard colors
@@ -352,9 +355,10 @@ namespace CSC_102_Project
             }
 
         }
+        #endregion
 
 
-
+        #region Display Class
         /// <summary>
         /// Display Class
         /// Handles all display refreshes and updates, Except for changing the color of the keyboard
@@ -456,7 +460,7 @@ namespace CSC_102_Project
 
         }
         #endregion
-
+        #endregion
 
 
         #region Form Variables
@@ -483,7 +487,7 @@ namespace CSC_102_Project
         #endregion
 
 
-
+        #region Form Init
         /// <summary>
         /// Initializes the Form and all of the controls and appropriate variables/classes
         /// </summary>
@@ -495,7 +499,7 @@ namespace CSC_102_Project
             testBoard = new Keyboard(InitKeyboard());
             testWordle = new Wordle(InitCustomWord());
         }
-
+        #endregion
 
 
         #region Keyboard Key Press Event Handlers
@@ -605,7 +609,7 @@ namespace CSC_102_Project
         #endregion
 
 
-
+        #region Toggle Custom Word Controls Method
         /// <summary>
         /// Toggles the Custom Word Controls
         /// </summary>
@@ -617,7 +621,7 @@ namespace CSC_102_Project
             CustomWordButton.Visible = !CustomWordButton.Visible;
             testWordle.CustomWordTextBox.Text = string.Empty;
         }
-
+        #endregion
 
 
         #region CustomWord Event Hanldlers
@@ -664,5 +668,7 @@ namespace CSC_102_Project
 
         }
         #endregion
+
+
     }
 }

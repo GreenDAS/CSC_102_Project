@@ -50,7 +50,6 @@ namespace CSC_102_Project
         #endregion
 
 
-
         #region Coder Implemented Code
         /// <summary>
         /// The number of guesses allowed in the game & length of words allowed
@@ -413,6 +412,8 @@ namespace CSC_102_Project
         }
 
         #endregion
+
+
     }
 }
 
