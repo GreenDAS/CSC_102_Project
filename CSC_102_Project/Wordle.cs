@@ -189,7 +189,7 @@ namespace CSC_102_Project
                 //reset Board and Grab new Wrd
                 wrdl.ResetGame();
                 disp.RefreshWholeDisplay();
-
+                currentTempCustomWord = string.Empty;
             }
 
             public void EnterPressed(Wordle wrdle, Display disp, bool IsCustomWordEnabled)
@@ -212,12 +212,15 @@ namespace CSC_102_Project
                 }
                 else
                 {
-                    if (currentGuess.Length != WORD_LENGTH)
+                    if (currentTempCustomWord.Length != WORD_LENGTH)
                     {
                         MessageBox.Show("Word is not the correct length");
                         return;
                     }
                     CustomWordEntered(wrdle, currentTempCustomWord);
+                    currentTempCustomWord = string.Empty;
+
+
                     return;
                 }
 
@@ -456,10 +459,12 @@ namespace CSC_102_Project
                 else if (e.KeyChar == (char)Keys.Enter)
                 {
                     testBoard.EnterPressed(testWordle, testDisplay, isCustomWordEnabled);
+                    if (isCustomWordEnabled) { ToggleCustomControls(); }
                 }
                 else if (e.KeyChar == (char)Keys.Escape)
                 {
                     testBoard.ResetPressed(testWordle, testDisplay);
+                    if (isCustomWordEnabled) { ToggleCustomControls(); }
                 }
                 else
                 {
@@ -494,6 +499,7 @@ namespace CSC_102_Project
             else if (clickedLabel.Text == "ENTER")
             {
                 testBoard.EnterPressed(testWordle, testDisplay, isCustomWordEnabled);
+                if (isCustomWordEnabled) { ToggleCustomControls(); }
             }
             else if (clickedLabel.Text == "CLEAR")
             {
@@ -502,6 +508,8 @@ namespace CSC_102_Project
             else if (clickedLabel.Text == "RESET")
             {
                 testBoard.ResetPressed(testWordle, testDisplay);
+                if (isCustomWordEnabled) { ToggleCustomControls(); }
+
             }
             else
             {
@@ -517,8 +525,16 @@ namespace CSC_102_Project
             }
         }
 
-
         
+        private void ToggleCustomControls()
+        {
+            CustomWordtextBox.Visible = !CustomWordtextBox.Visible;
+            isCustomWordEnabled = !isCustomWordEnabled;
+            CustomWordButton.Enabled = !CustomWordButton.Enabled;
+            CustomWordButton.Visible = !CustomWordButton.Visible;
+            testWordle.CustomWordTextBox.Text = string.Empty;
+        }
+
 
         private void WordleForm_CustomWordEnableButton_Click(object sender, EventArgs e)
         {
@@ -532,10 +548,7 @@ namespace CSC_102_Project
                 CustomWordtextBox.MaxLength = 5;
             }
 
-            CustomWordtextBox.Visible = !CustomWordtextBox.Visible;
-            isCustomWordEnabled = !isCustomWordEnabled;
-            CustomWordButton.Enabled = !CustomWordButton.Enabled;
-            CustomWordButton.Visible = !CustomWordButton.Visible;
+            ToggleCustomControls();
         }
 
         private void WordleForm_CustomWordButton_Click(object sender, EventArgs e)
@@ -545,10 +558,7 @@ namespace CSC_102_Project
                 MessageBox.Show("Word is not the correct length");
                 return;
             }
-            CustomWordtextBox.Visible = !CustomWordtextBox.Visible;
-            isCustomWordEnabled = !isCustomWordEnabled;
-            CustomWordButton.Enabled = !CustomWordButton.Enabled;
-            CustomWordButton.Visible = !CustomWordButton.Visible;
+            ToggleCustomControls();
             string customWord = testWordle.CustomWordTextBox.Text.ToUpper();
             testWordle.CustomWordTextBox.Text = string.Empty;
             testWordle.ResetGame();
