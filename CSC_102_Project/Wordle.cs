@@ -58,9 +58,14 @@ namespace CSC_102_Project
         private class Wordle : GuessHandler
         {
             private string correctWord = "APPLE";
-            public TextBox CustomWordTextBox;
-            
 
+            public TextBox CustomWordTextBox;
+
+            #region Game Logic Methods
+            /// <summary>
+            /// Checks to see if the current guess is correct and maps the colors to the guessColorMap
+            /// </summary>
+            /// <returns>True if Correct, False Otherwise</returns>
             public bool IsCorrect()
             {
                 if (correctWord.ToUpper() == currentGuess.ToUpper())
@@ -126,14 +131,22 @@ namespace CSC_102_Project
                 }
                 return false;
             }
+            #endregion
 
+            #region Game Start/Stop/Debug Methods
+            /// <summary>
+            /// Updates correct word to the custom word entered by the user
+            /// </summary>
+            /// <param name="CustomWord"></param>
             public void CustomWordEntered(string CustomWord)
             {
                 correctWord = CustomWord;
             }
 
 
-
+            /// <summary>
+            /// Debug Method to reset the game board and all the variables except the correct word
+            /// </summary>
             public void DebugResetGame()
             {
                 currentGuess = string.Empty;
@@ -148,11 +161,20 @@ namespace CSC_102_Project
                 currentTimeGuessing = 1;
             }
 
+
+            /// <summary>
+            /// Load a new word from the file
+            /// </summary>
             public void LoadNewWord()
             {
                 // Load new word from file
             }
+            #endregion
 
+            /// <summary>
+            /// Wordle Constructor
+            /// </summary>
+            /// <param name="customWordTextBox"></param>
             public Wordle(TextBox customWordTextBox)
             {
                 CustomWordTextBox = customWordTextBox;
@@ -170,6 +192,12 @@ namespace CSC_102_Project
         {
             protected static System.Windows.Forms.Label[][] KeyboardLabels;
 
+            #region Key Press Methods
+            /// <summary>
+            /// Change the color of the keyboard label based on the correctness of the letter
+            /// </summary>
+            /// <param name="LabelToUpdate"></param>
+            /// <param name="Correctness"></param>
             public void ChangeColor(Label LabelToUpdate, Correctness Correctness)
             {
                 
@@ -200,6 +228,12 @@ namespace CSC_102_Project
                 }
             }
 
+
+            /// <summary>
+            /// Add a letter to the current guess
+            /// </summary>
+            /// <param name="Key"></param>
+            /// <param name="IsCustomWordEnabled"></param>
             public void KeyPressed(string Key, bool IsCustomWordEnabled)
             
             {
@@ -207,6 +241,12 @@ namespace CSC_102_Project
                 else if (currentTempCustomWord.Length < WORD_LENGTH & IsCustomWordEnabled) { currentTempCustomWord += Key; }
             }
 
+
+            /// <summary>
+            /// Handles Reset Button Pressed
+            /// </summary>
+            /// <param name="wrdl"></param>
+            /// <param name="disp"></param>
             public void ResetPressed(Wordle wrdl, Display disp)
             {
                 //reset Board and Grab new Wrd
@@ -215,6 +255,12 @@ namespace CSC_102_Project
                 currentTempCustomWord = string.Empty;
             }
 
+
+            /// <summary>
+            /// Handles Load Button Pressed
+            /// </summary>
+            /// <param name="wrdl"></param>
+            /// <param name="disp"></param>
             public void LoadPressed(Wordle wrdl, Display disp)
             {
                 //Load new Wrd
@@ -224,6 +270,13 @@ namespace CSC_102_Project
                 currentTempCustomWord = string.Empty;
             }
 
+
+            /// <summary>
+            /// Handles Enter Button Pressed
+            /// </summary>
+            /// <param name="wrdle"></param>
+            /// <param name="disp"></param>
+            /// <param name="IsCustomWordEnabled"></param>
             public void EnterPressed(Wordle wrdle, Display disp, bool IsCustomWordEnabled)
             {
                 if (!IsCustomWordEnabled)
@@ -307,6 +360,11 @@ namespace CSC_102_Project
                 currentGuess = string.Empty;
             }
 
+
+            /// <summary>
+            /// Handles Delete Button Pressed
+            /// </summary>
+            /// <param name="IsCustomWordEnabled"></param>
             public void DeletePressed(bool IsCustomWordEnabled)
             {
                 if (currentGuess.Length > 0 & !IsCustomWordEnabled)
@@ -319,6 +377,11 @@ namespace CSC_102_Project
                 }
             }
 
+
+            /// <summary>
+            /// Handles Clear Button Pressed
+            /// </summary>
+            /// <param name="IsCustomWordEnabled"></param>
             public void ClearPressed(bool IsCustomWordEnabled)
             {
                 if (!IsCustomWordEnabled)
@@ -331,27 +394,36 @@ namespace CSC_102_Project
                 }
             }
 
+
+            /// <summary>
+            /// Handles Custom Word Button Pressed
+            /// </summary>
+            /// <param name="wrdle"></param>
+            /// <param name="CustomWrd"></param>
             public void CustomWordEntered(Wordle wrdle, string CustomWrd)
             {
                 wrdle.CustomWordEntered(CustomWrd);
             }
+            #endregion
 
-            public string DegbugPrint
-            {
-                get
-                {
-                    return currentGuess;
-                }
-            }
-
+            #region Constructors
+            /// <summary>
+            /// Keyboard Constructor
+            /// </summary>
+            /// <param name="keyboardLabels"></param>
             public Keyboard(Label[][] keyboardLabels)
             {
                 KeyboardLabels = keyboardLabels;
             }
 
+
+            /// <summary>
+            /// Keyboard Constructor So that no error Occurs with the Display Class
+            /// </summary>
             public Keyboard()
             {
             }
+            #endregion
 
         }
         #endregion
@@ -367,6 +439,10 @@ namespace CSC_102_Project
             public Label[,] DisplayLabels;
             public Label[,] ScoreLabels;
 
+
+            /// <summary>
+            /// Change the color of the display label based on the correctness of the letter
+            /// </summary>
             public void ChangeColor()
             {
                 for (int i = 0; i < guessColorMap.Length; i++)
@@ -396,6 +472,9 @@ namespace CSC_102_Project
             }
 
 
+            /// <summary>
+            /// Update the display labels with the current guess
+            /// </summary>
             public void UpdateDisplay()
             {
                 for (int i = 0; i < WORD_LENGTH; i++)
@@ -421,13 +500,19 @@ namespace CSC_102_Project
             }
 
 
+            /// <summary>
+            /// Update the display labels with the current custom word
+            /// </summary>
+            /// <param name="customWordTextBox"></param>
             public void UpdateDisplay(TextBox customWordTextBox)
             {
                 customWordTextBox.Text = currentTempCustomWord;
             }
 
 
-
+            /// <summary>
+            /// Refresh the whole display
+            /// </summary>
             public void RefreshWholeDisplay()
             {
                 
