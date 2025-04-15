@@ -83,6 +83,13 @@ namespace CSC_102_Project
         public string KeyboardSpecialKeysLetterMap = "ENTER,DEL,CLEAR,RESET,LOAD";
 
         /// <summary>
+        /// The score labels for the game
+        /// [0,X] = Text for Telling Wins/Losses
+        /// [1,X] = Win/Loss Score
+        /// </summary>
+        public System.Windows.Forms.Label[,] ScoreLabels = new System.Windows.Forms.Label[2,2];
+
+        /// <summary>
         /// The label and text box for the custom word input
         /// </summary>
         public System.Windows.Forms.Label CustomWordLabel = new System.Windows.Forms.Label();
@@ -307,6 +314,58 @@ namespace CSC_102_Project
             return DisplayLabels;
         }
 
+
+
+        /// <summary>
+        /// Initialize the Scoreboard Labels
+        /// </summary>
+        /// <returns>2x2 Array of Scorboard Labels</returns>
+        private System.Windows.Forms.Label[,] InitScoreBoard()
+        {
+            int x = this.Width / 2 + ((2 * (50 + 13)) + 25 + 13);
+            int y = (100 + 3*ypad);
+            for (int i = 0; i < this.ScoreLabels.GetLength(0); i++)
+            {
+                this.ScoreLabels[0, i] = new System.Windows.Forms.Label();
+                if (i == 0)
+                {
+                    this.ScoreLabels[0, i].Text = "W";
+                }
+                else
+                {
+                    this.ScoreLabels[0, i].Text = "L";
+                }
+                this.ScoreLabels[0, i].BackColor = Color.Black;
+                this.ScoreLabels[0, i].ForeColor = Color.White;
+                this.ScoreLabels[0, i].BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                this.ScoreLabels[0, i].TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                this.ScoreLabels[0, i].Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                this.ScoreLabels[0, i].AutoSize = false;
+                this.ScoreLabels[0, i].Location = new System.Drawing.Point(x, y);
+                this.ScoreLabels[0, i].Size = new System.Drawing.Size(50, 50);
+                this.Controls.Add(this.ScoreLabels[0, i]);
+                x += 50;
+            }
+            x -= 100;
+            y += 50;
+            for (int i = 0; i < this.ScoreLabels.GetLength(1); i++)
+            {
+                this.ScoreLabels[1, i] = new System.Windows.Forms.Label();
+                this.ScoreLabels[1, i].Text = "0";
+                this.ScoreLabels[1, i].BackColor = Color.Black;
+                this.ScoreLabels[1, i].ForeColor = Color.White;
+                this.ScoreLabels[1, i].BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                this.ScoreLabels[1, i].TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                this.ScoreLabels[1, i].Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                this.ScoreLabels[1, i].AutoSize = false;
+                this.ScoreLabels[1, i].Location = new System.Drawing.Point(x, y);
+                this.ScoreLabels[1, i].Size = new System.Drawing.Size(50, 50);
+                this.Controls.Add(this.ScoreLabels[1, i]);
+                x += 50;
+            }
+
+            return ScoreLabels;
+        }
 
 
         /// <summary>

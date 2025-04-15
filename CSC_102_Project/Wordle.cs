@@ -13,12 +13,15 @@ namespace CSC_102_Project
 {
     public partial class WordleForm : Form
     {
-        
 
 
+
+        /// <summary>
+        /// GuessHandler Class
+        /// Defines static variables that all other classes can access
+        /// </summary>
         private class GuessHandler
         {
-            // put outside of class to make it easier to access
 
             protected static string[] guessesMade = new string[GUESSES_ALLOWED];
 
@@ -27,6 +30,10 @@ namespace CSC_102_Project
             protected static string currentTempCustomWord = string.Empty;
 
             protected static int currentTimeGuessing = 1;
+
+            protected static int timesWon = 0;
+
+            protected static int timesLost = 0;
 
             public enum Correctness
             {
@@ -41,10 +48,16 @@ namespace CSC_102_Project
 
 
 
+        /// <summary>
+        /// Wordle Class
+        /// Handles all the guessing logic and communicating with the Filemanager
+        /// Only class that knows of the correct word
+        /// </summary>
         private class Wordle : GuessHandler
         {
             private string correctWord = "APPLE";
             public TextBox CustomWordTextBox;
+            
 
             public bool IsCorrect()
             {
@@ -133,7 +146,7 @@ namespace CSC_102_Project
                 currentTimeGuessing = 1;
             }
 
-            public void LoardNewWord()
+            public void LoadNewWord()
             {
                 // Load new word from file
             }
@@ -146,6 +159,10 @@ namespace CSC_102_Project
 
 
 
+        /// <summary>
+        /// Keyboard Class
+        /// Handles all keypresses and update the keyboard colors
+        /// </summary>
         private class Keyboard : GuessHandler
         {
             protected static System.Windows.Forms.Label[][] KeyboardLabels;
@@ -199,7 +216,7 @@ namespace CSC_102_Project
             {
                 //Load new Wrd
                 wrdl.DebugResetGame();
-                wrdl.LoardNewWord();
+                wrdl.LoadNewWord();
                 disp.RefreshWholeDisplay();
                 currentTempCustomWord = string.Empty;
             }
@@ -208,6 +225,7 @@ namespace CSC_102_Project
             {
                 if (!IsCustomWordEnabled)
                 {
+                    
                     for (int i = 0; i < guessesMade.Length; i++)
                     {
                         if (guessesMade[i] == currentGuess)
@@ -237,7 +255,7 @@ namespace CSC_102_Project
                 }
 
 
-                    wrdle.IsCorrect();
+                bool guessIsCorrect = wrdle.IsCorrect();
 
                 // Find Label and Update Color
 
@@ -268,10 +286,16 @@ namespace CSC_102_Project
                 // Find Display Label and Update Color
                 disp.ChangeColor();
 
-                if (wrdle.IsCorrect())
+                if (guessIsCorrect)
                 {
                     MessageBox.Show($"You Win! The word was {currentGuess.ToUpper()}! \nClick 'OK' to Play Again!");
-                    ResetPressed(wrdle, disp);
+                    timesWon++;
+                    return;
+                }
+                else if (currentTimeGuessing >= GUESSES_ALLOWED & !guessIsCorrect)
+                {
+                    MessageBox.Show($"You Lose! The word was {currentGuess.ToUpper()}! \nClick 'OK' to Play Again!");
+                    timesLost++;
                     return;
                 }
 
@@ -330,10 +354,14 @@ namespace CSC_102_Project
 
 
 
+        /// <summary>
+        /// Display Class
+        /// Handles all display refreshes and updates, Except for changing the color of the keyboard
+        /// </summary>
         private class Display : Keyboard
         {
-            public static Label[,] DisplayLabels;
-
+            public Label[,] DisplayLabels;
+            public Label[,] ScoreLabels;
 
             public void ChangeColor()
             {
@@ -384,6 +412,8 @@ namespace CSC_102_Project
                         }
                     }
                 }
+                ScoreLabels[1, 0].Text = $"{timesWon}";
+                ScoreLabels[1, 1].Text = $"{timesLost}";
             }
 
 
@@ -416,9 +446,10 @@ namespace CSC_102_Project
             }
 
 
-            public Display(Label[,] dispLabels)
+            public Display(Label[,] dispLabels, Label[,] scoreLabels)
             {
                 DisplayLabels = dispLabels;
+                ScoreLabels = scoreLabels;
             }
 
 
@@ -426,25 +457,23 @@ namespace CSC_102_Project
 
 
 
-        // 
-        // Temp Code
-        //
-
+        /// <summary>
+        /// Init Display, Keyboard, and Wordle Vars
+        /// </summary>
         private Keyboard testBoard;
         private Display testDisplay;
         private Wordle testWordle;
 
-        //
-        //
-        //
 
 
-
+        /// <summary>
+        /// Initializes the Form and all of the controls and appropriate variables/classes
+        /// </summary>
         public WordleForm()
         {
             InitializeComponent();
             
-            testDisplay = new Display(InitDisplay());
+            testDisplay = new Display(InitDisplay(), InitScoreBoard());
             testBoard = new Keyboard(InitKeyboard());
             testWordle = new Wordle(InitCustomWord());
         }
@@ -453,9 +482,20 @@ namespace CSC_102_Project
 
         // Get Keyboard KeyStoke
         string lastKey;
+
+
+
+        // Is a Cutom Word being Entered
         bool isCustomWordEnabled = false;
 
 
+
+        /// <summary>
+        /// Key Press Event Handler
+        /// Checks to see if the key pressed is a special key or a letter and clals the appropriate method
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WordleForm_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Space)
@@ -493,6 +533,12 @@ namespace CSC_102_Project
 
 
 
+        /// <summary>
+        /// Key Up Event Handler
+        /// Checks to see if the key has been released (denotes a click of a key)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WordleForm_KeyUp(object sender, KeyEventArgs e)
         {
             lastKey = "";
@@ -500,6 +546,12 @@ namespace CSC_102_Project
 
 
 
+        /// <summary>
+        /// Keyboard Click Event Handler
+        /// Checks to see if key press was a special key or a letter and calls the appropriate method
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WordleForm_Keyboard_Click(object sender, EventArgs e)
         {
             Label clickedLabel = (Label)sender;
@@ -542,7 +594,11 @@ namespace CSC_102_Project
             }
         }
 
-        
+
+
+        /// <summary>
+        /// Toggles the Custom Word Controls
+        /// </summary>
         private void ToggleCustomControls()
         {
             CustomWordtextBox.Visible = !CustomWordtextBox.Visible;
@@ -553,6 +609,12 @@ namespace CSC_102_Project
         }
 
 
+
+        /// <summary>
+        /// Tells the Program that the user is typig in a custom word
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WordleForm_CustomWordEnableButton_Click(object sender, EventArgs e)
         {
             KeyPreview = true;
@@ -568,6 +630,13 @@ namespace CSC_102_Project
             ToggleCustomControls();
         }
 
+
+
+        /// <summary>
+        /// Tells the program that the user has entered a custom word
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WordleForm_CustomWordButton_Click(object sender, EventArgs e)
         {
             if (CustomWordtextBox.Text.Length != 5)
