@@ -501,10 +501,6 @@ namespace CSC_102_Project
                         MessageBox.Show("Word is not the correct length");
                         return;
                     }
-                }
-
-                if (!justWonOrLost)
-                {
                     bool[] guessIsCorrect = wrdle.IsCorrect();
                     if (guessIsCorrect[1])
                     {
