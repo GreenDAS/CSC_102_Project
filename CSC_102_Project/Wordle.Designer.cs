@@ -424,7 +424,7 @@ namespace CSC_102_Project
 
 
         
-        private System.Windows.Forms.FileDialog InitFileDialog()
+        private System.Windows.Forms.OpenFileDialog InitFileDialog()
         {
             this.FileDialog.Title = "Select a Word File";
             this.FileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";

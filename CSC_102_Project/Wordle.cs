@@ -17,13 +17,16 @@ namespace CSC_102_Project
 
 
         #region Class Delcarations
-        #region GuessHandler Class
 
 
 
+        /// <summary>
+        /// File Manager Class
+        /// </summary>
         private class FileManager
         {
             private string filePath = "wordList.txt";
+            private WordleForm myWordleForm;
             private OpenFileDialog findWordListDialog = new OpenFileDialog();
             private Dictionary<string, string> wordleWords = new Dictionary<string, string>();
 
@@ -40,7 +43,9 @@ namespace CSC_102_Project
             }
 
 
-
+            /// <summary>
+            /// Reads the word list from the file and parses it into a dictionary
+            /// </summary>
             private void ReadWordList()
             {
                 {
@@ -68,6 +73,10 @@ namespace CSC_102_Project
                                         {
                                             filePath = findWordListDialog.FileName;
                                         }
+                                        else
+                                        {
+                                            myWordleForm.Close();
+                                        }
                                         break;
                                     }
                                 }
@@ -79,6 +88,10 @@ namespace CSC_102_Project
                             if (findWordListDialog.ShowDialog() == DialogResult.OK)
                             {
                                 filePath = findWordListDialog.FileName;
+                            }
+                            else
+                            {
+                                myWordleForm.Close();
                             }
                         }
                         catch (IOException)
@@ -94,7 +107,10 @@ namespace CSC_102_Project
             }
 
 
-            // Store the word list in a file
+
+            /// <summary>
+            /// stores the word list to the file
+            /// </summary>
             public void StoreWordList()
             {
                 bool fileFound = false;
@@ -107,6 +123,7 @@ namespace CSC_102_Project
                             foreach (KeyValuePair<string, string> kvp in wordleWords)
                             {
                                 outputFile.WriteLine($"{kvp.Key},{kvp.Value}");
+                                fileFound = true;
                             }
                         }
                     }
@@ -152,6 +169,7 @@ namespace CSC_102_Project
                     if (int.Parse(wordleWords[word]) == lowestLeastTimesUsed)
                     {
                         wordleWords[word] = (int.Parse(wordleWords[word]) + 1).ToString();
+                        myWordleForm.Focus();
                         return word;
                     }
                 }
@@ -163,15 +181,16 @@ namespace CSC_102_Project
             /// <summary>
             /// FileManager Constructor When No file is Given
             /// </summary>
-            public FileManager(OpenFileDialog fileDialog)
+            public FileManager(OpenFileDialog fileDialog, WordleForm MyWordleForm)
             {
                 findWordListDialog = fileDialog;
+                myWordleForm = MyWordleForm;
             }
 
         }
 
 
-
+        #region GuessHandler Class
         /// <summary>
         /// GuessHandler Class
         /// Defines static variables that all other classes can access
@@ -190,6 +209,8 @@ namespace CSC_102_Project
             protected static int timesWon = 0;
 
             protected static int timesLost = 0;
+
+            protected static bool justWonOrLost = false;
 
             public enum Correctness
             {
@@ -212,32 +233,45 @@ namespace CSC_102_Project
         /// </summary>
         private class Wordle : GuessHandler
         {
-            private string correctWord = "APPLE";
+            private string correctWord;
 
             public TextBox CustomWordTextBox;
+
+            private FileManager myFileManager;
 
             #region Game Logic Methods
             /// <summary>
             /// Checks to see if the current guess is correct and maps the colors to the guessColorMap
             /// </summary>
             /// <returns>True if Correct, False Otherwise</returns>
-            public bool IsCorrect()
+            public bool[] IsCorrect()
             {
+                bool[] returnVariable = new bool[2]; // [0] = IsCorrect, [1] = Error?
+                returnVariable[0] = false;
+                returnVariable[1] = false;
                 if (correctWord.ToUpper() == currentGuess.ToUpper())
                 {
                     for (int i = 0; i < 5; i++)
                     {
                         guessColorMap[i] = Correctness.correctPlace;
+                        returnVariable[0] = true;
+                        returnVariable[1] = false;
                     }
-                    return true;
+                    return returnVariable;
 
                 }
                 else
                 {
+                    if (!myFileManager.IsValid(currentGuess))
+                    {
+                        returnVariable[0] = false;
+                        returnVariable[1] = true;
+                        return returnVariable;
+                    }
                     Dictionary<char, int> correctPlaces = new Dictionary<char, int>();
                     foreach (char c in correctWord.ToUpper())
                     {
-                        // Check each value nad check to see if the correct place has been found yet or not for this letter
+                        // Check each value and check to see if the correct place has been found yet or not for this letter
                         if (!correctPlaces.ContainsKey(c))
                         {
                             correctPlaces.Add(c, 1);
@@ -284,7 +318,7 @@ namespace CSC_102_Project
                         
                     }
                 }
-                return false;
+                return returnVariable;
             }
             #endregion
 
@@ -322,7 +356,8 @@ namespace CSC_102_Project
             /// </summary>
             public void LoadNewWord()
             {
-                // Load new word from file
+                correctWord = myFileManager.GetWord();
+                myFileManager.StoreWordList();
             }
             #endregion
 
@@ -331,9 +366,11 @@ namespace CSC_102_Project
             /// Wordle Constructor
             /// </summary>
             /// <param name="customWordTextBox"></param>
-            public Wordle(TextBox customWordTextBox)
+            public Wordle(TextBox customWordTextBox, FileManager MyFileManager)
             {
                 CustomWordTextBox = customWordTextBox;
+                myFileManager = MyFileManager;
+                LoadNewWord();
             }
         }
         #endregion
@@ -408,6 +445,7 @@ namespace CSC_102_Project
                 //reset Board and Grab new Wrd
                 wrdl.DebugResetGame();
                 disp.RefreshWholeDisplay();
+                justWonOrLost = false;
                 currentTempCustomWord = string.Empty;
             }
 
@@ -423,6 +461,7 @@ namespace CSC_102_Project
                 wrdl.DebugResetGame();
                 wrdl.LoadNewWord();
                 disp.RefreshWholeDisplay();
+                justWonOrLost = false;
                 currentTempCustomWord = string.Empty;
             }
 
@@ -435,9 +474,20 @@ namespace CSC_102_Project
             /// <param name="IsCustomWordEnabled"></param>
             public void EnterPressed(Wordle wrdle, Display disp, bool IsCustomWordEnabled)
             {
-                if (!IsCustomWordEnabled)
+                if (IsCustomWordEnabled)
                 {
-                    
+                    if (currentTempCustomWord.Length != WORD_LENGTH)
+                    {
+                        MessageBox.Show("Word is not the correct length");
+                        return;
+                    }
+
+                    CustomWordEntered(wrdle, currentTempCustomWord);
+                    ResetPressed(wrdle, disp);
+
+                }
+                else if (!justWonOrLost)
+                {
                     for (int i = 0; i < guessesMade.Length; i++)
                     {
                         if (guessesMade[i] == currentGuess)
@@ -452,69 +502,60 @@ namespace CSC_102_Project
                         return;
                     }
                 }
-                else
+
+                if (!justWonOrLost)
                 {
-                    if (currentTempCustomWord.Length != WORD_LENGTH)
+                    bool[] guessIsCorrect = wrdle.IsCorrect();
+                    if (guessIsCorrect[1])
                     {
-                        MessageBox.Show("Word is not the correct length");
+                        MessageBox.Show("Not a Known Word!");
                         return;
                     }
-                    
-                    CustomWordEntered(wrdle, currentTempCustomWord);
-                    ResetPressed(wrdle, disp);
+                    // Find Label and Update Color
 
-
-                    return;
-                }
-
-
-                bool guessIsCorrect = wrdle.IsCorrect();
-
-                // Find Label and Update Color
-
-                bool labelFoundFlag = false;
-                for (int i = 0; i < currentGuess.Length; i++)
-                {
-                    for (int j = 0; j < KeyboardLabels.Length; j++)
+                    bool labelFoundFlag = false;
+                    for (int i = 0; i < currentGuess.Length; i++)
                     {
-                        for (int k = 0; k < KeyboardLabels[j].Length; k++)
+                        for (int j = 0; j < KeyboardLabels.Length; j++)
                         {
-                            if (KeyboardLabels[j][k].Text.ToUpper() == currentGuess[i].ToString().ToUpper())
+                            for (int k = 0; k < KeyboardLabels[j].Length; k++)
                             {
-                                ChangeColor(KeyboardLabels[j][k], guessColorMap[i]);
-                                labelFoundFlag = true;
+                                if (KeyboardLabels[j][k].Text.ToUpper() == currentGuess[i].ToString().ToUpper())
+                                {
+                                    ChangeColor(KeyboardLabels[j][k], guessColorMap[i]);
+                                    labelFoundFlag = true;
+                                    break;
+                                }
+                            }
+                            if (labelFoundFlag)
+                            {
+                                labelFoundFlag = false;
                                 break;
                             }
                         }
-                        if (labelFoundFlag)
-                        {
-                            labelFoundFlag = false;
-                            break;
-                        }
                     }
+
+
+
+                    // Find Display Label and Update Color
+                    disp.ChangeColor();
+
+                    if (currentTimeGuessing <= GUESSES_ALLOWED & guessIsCorrect[0])
+                    {
+                        MessageBox.Show($"You Win! The word was {currentGuess.ToUpper()}! \nClick 'OK' to Play Again!");
+                        justWonOrLost = true;
+                        timesWon++;
+                    }
+                    else if (currentTimeGuessing == GUESSES_ALLOWED & !guessIsCorrect[0])
+                    {
+                        MessageBox.Show($"You Lose! \nClick 'OK' to Play Again!");
+                        justWonOrLost = true;
+                        timesLost++;
+                    }
+                    guessesMade[currentTimeGuessing - 1] = currentGuess;
+                    currentTimeGuessing++;
+                    currentGuess = string.Empty;
                 }
-
-
-
-                // Find Display Label and Update Color
-                disp.ChangeColor();
-
-                if (guessIsCorrect)
-                {
-                    MessageBox.Show($"You Win! The word was {currentGuess.ToUpper()}! \nClick 'OK' to Play Again!");
-                    timesWon++;
-                    return;
-                }
-                else if (currentTimeGuessing >= GUESSES_ALLOWED & !guessIsCorrect)
-                {
-                    MessageBox.Show($"You Lose! The word was {currentGuess.ToUpper()}! \nClick 'OK' to Play Again!");
-                    timesLost++;
-                    return;
-                }
-
-                guessesMade[currentTimeGuessing - 1] = currentGuess;
-                currentTimeGuessing++;
-                currentGuess = string.Empty;
             }
 
 
@@ -604,6 +645,8 @@ namespace CSC_102_Project
             {
                 for (int i = 0; i < guessColorMap.Length; i++)
                 {
+                    if (currentTimeGuessing <= GUESSES_ALLOWED)
+                    {
                     Label LabelToUpdate = DisplayLabels[i, currentTimeGuessing - 1];
                     switch (guessColorMap[i])
                     {
@@ -621,7 +664,8 @@ namespace CSC_102_Project
 
                         default:
                             MessageBox.Show("No Known Correct Location Error");
-                            break;
+                                break;
+                        }
 
                     }
                 }
@@ -708,6 +752,7 @@ namespace CSC_102_Project
         /// <summary>
         /// Init Display, Keyboard, and Wordle Vars
         /// </summary>
+        private FileManager testFileManager;
         private Keyboard testBoard;
         private Display testDisplay;
         private Wordle testWordle;
@@ -728,6 +773,7 @@ namespace CSC_102_Project
         #endregion
 
 
+
         #region Form Init
         /// <summary>
         /// Initializes the Form and all of the controls and appropriate variables/classes
@@ -738,7 +784,8 @@ namespace CSC_102_Project
             
             testDisplay = new Display(InitDisplay(), InitScoreBoard());
             testBoard = new Keyboard(InitKeyboard());
-            testWordle = new Wordle(InitCustomWord());
+            testFileManager = new FileManager(InitFileDialog(), this);
+            testWordle = new Wordle(InitCustomWord(), testFileManager);
         }
         #endregion
 
