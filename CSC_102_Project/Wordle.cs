@@ -22,7 +22,7 @@ namespace CSC_102_Project
         /// </summary>
         private class FileManager
         {
-            private string filePath = "wordList.txt";
+            private string filePath = "wordlist.txt";
             private WordleForm myWordleForm;
             private OpenFileDialog findWordListDialog = new OpenFileDialog();
             private Dictionary<string, string> wordleWords = new Dictionary<string, string>();
