@@ -18,6 +18,73 @@ namespace CSC_102_Project
 
         #region Class Delcarations
         #region GuessHandler Class
+
+
+
+        private class FileManager
+        {
+            private string filePath = "wordList.txt";
+            private OpenFileDialog findWordListDialog = new OpenFileDialog();
+            private Dictionary<string, string> wordleWords = new Dictionary<string, string>();
+
+
+            /// <summary>
+            /// FileManager Constructor When No file is Given
+            /// </summary>
+            public FileManager(OpenFileDialog fileDialog)
+            {
+                // Load the file and parse the words into a dictionary
+                bool fileFound = false;
+                findWordListDialog = fileDialog;
+                while (!fileFound)
+                {
+                    try
+                    {
+                        using (StreamReader inputFile = new StreamReader(filePath))
+                        {
+                            while (!inputFile.EndOfStream)
+                            {
+                                string line = inputFile.ReadLine();
+                                string[] parts = line.Split(',');
+                                if (parts.Length == 2)
+                                {
+                                    fileFound = true;
+                                    wordleWords.Add(parts[0], parts[1]);
+                                }
+                                else
+                                {
+                                    MessageBox.Show("File is not in the correct format");
+                                    if (findWordListDialog.ShowDialog() == DialogResult.OK)
+                                    {
+                                        filePath = findWordListDialog.FileName;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        MessageBox.Show("File not found");
+                        if (findWordListDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            filePath = findWordListDialog.FileName;
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        MessageBox.Show("File is not in the correct format");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"An error occurred: {ex.Message}");
+                    }
+                }
+            }
+        }
+
+
+
         /// <summary>
         /// GuessHandler Class
         /// Defines static variables that all other classes can access

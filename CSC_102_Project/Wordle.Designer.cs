@@ -78,7 +78,9 @@ namespace CSC_102_Project
         public System.Windows.Forms.Label[] KeyboardSpecialKeys = new System.Windows.Forms.Label[5];
         public string KeyboardSpecialKeysLetterMap = "ENTER,DEL,CLEAR,RESET,LOAD";
 
+        
 
+        // public System.Windows.Forms.Label LossLabelOverlay = new System.Windows.Forms.Label();
 
         /// <summary>
         /// The score labels for the game
@@ -86,6 +88,13 @@ namespace CSC_102_Project
         /// [1,X] = Win/Loss Score
         /// </summary>
         public System.Windows.Forms.Label[,] ScoreLabels = new System.Windows.Forms.Label[2,2];
+
+
+
+        /// <summary>
+        /// The file dialog for loading the word file
+        /// </summary>
+        public System.Windows.Forms.OpenFileDialog FileDialog = new System.Windows.Forms.OpenFileDialog();
 
 
 
@@ -369,6 +378,7 @@ namespace CSC_102_Project
         }
 
 
+
         /// <summary>
         /// Initialize the custom word input
         /// </summary>
@@ -411,6 +421,42 @@ namespace CSC_102_Project
             return CustomWordtextBox;
         }
 
+
+
+        
+        private System.Windows.Forms.FileDialog InitFileDialog()
+        {
+            this.FileDialog.Title = "Select a Word File";
+            this.FileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            this.FileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            this.FileDialog.RestoreDirectory = true;
+            this.FileDialog.CheckFileExists = true;
+            this.FileDialog.CheckPathExists = true;
+            this.FileDialog.DereferenceLinks = true;
+            this.FileDialog.ShowReadOnly = false;
+            this.FileDialog.ShowHelp = true;
+            this.FileDialog.AutoUpgradeEnabled = true;
+            return FileDialog;
+        }
+
+
+        /*
+        private System.Windows.Forms.Label InitLossLabelOverlay()
+        {
+            this.LossLabelOverlay.Text = "You Lose!";
+            this.LossLabelOverlay.BackColor = Color.FromArgb(80,255,0,0);
+            this.LossLabelOverlay.ForeColor = Color.White;
+            this.LossLabelOverlay.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LossLabelOverlay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LossLabelOverlay.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LossLabelOverlay.AutoSize = false;
+            this.LossLabelOverlay.Visible = false;
+            this.LossLabelOverlay.Location = new System.Drawing.Point(0,0);
+            this.LossLabelOverlay.Size = new System.Drawing.Size(this.Width, this.Height);
+            this.Controls.Add(this.LossLabelOverlay);
+            return LossLabelOverlay;
+        }
+        */
         #endregion
 
 
