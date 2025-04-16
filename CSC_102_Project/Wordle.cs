@@ -141,10 +141,19 @@ namespace CSC_102_Project
             /// <param name="CustomWord"></param>
             public void CustomWordEntered(string CustomWord)
             {
-                try
+                correctWord = CustomWord;
+            }
+
+
+            /// <summary>
+            /// Debug Method to reset the game board and all the variables except the correct word
+            /// </summary>
+            public void DebugResetGame()
+            {
+                currentGuess = string.Empty;
+                for (int i = 0; i < guessesMade.Length; i++)
                 {
-                    string[] lines = wordle.Select(pair => $"{pair.Key}, {pair.Value}").ToString
-                    File.WriteAllLines(filePath, lines);
+                    guessesMade[i] = string.Empty;
                 }
                 for (int i = 0; i < guessColorMap.Length; i++)
                 {
