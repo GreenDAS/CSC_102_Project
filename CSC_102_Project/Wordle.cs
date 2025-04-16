@@ -25,7 +25,7 @@ namespace CSC_102_Project
             private string filePath = "wordlist.txt";
             private WordleForm myWordleForm;
             private OpenFileDialog findWordListDialog = new OpenFileDialog();
-            private Dictionary<string, string> wordleWords = new Dictionary<string, string>();
+            private Dictionary<string, int> wordleWords = new Dictionary<string, int>();
 
 
 
@@ -61,7 +61,7 @@ namespace CSC_102_Project
                                     if (parts.Length == 2)
                                     {
                                         fileFound = true;
-                                        wordleWords.Add(parts[0], parts[1]);
+                                        wordleWords.Add(parts[0], int.Parse(parts[1]));
                                     }
                                     else
                                     {
@@ -119,7 +119,7 @@ namespace CSC_102_Project
                     {
                         using (StreamWriter outputFile = new StreamWriter(filePath))
                         {
-                            foreach (KeyValuePair<string, string> kvp in wordleWords)
+                            foreach (KeyValuePair<string, int> kvp in wordleWords)
                             {
                                 outputFile.WriteLine($"{kvp.Key},{kvp.Value}");
                                 fileFound = true;
@@ -159,26 +159,25 @@ namespace CSC_102_Project
                     {
                         ReadWordList();
                     }
-                    int lowestLeastTimesUsed = int.Parse(wordleWords.Values.Min());
-                    bool suitableWordFound = false;
-                        while (!suitableWordFound)
+                    int lowestLeastTimesUsed = (wordleWords.Values.Min());
+                    List<string> suitableWords = new List<string>();
+                    foreach (KeyValuePair<string, int> kvp in wordleWords)
+                    {
+                        if (kvp.Value == lowestLeastTimesUsed)
                         {
-                            Random rand = new Random();
-                            int index = rand.Next(0, wordleWords.Count);
-                            string word = wordleWords.ElementAt(index).Key;
-                            if (int.Parse(wordleWords[word]) == lowestLeastTimesUsed)
-                            {
-                                wordleWords[word] = (int.Parse(wordleWords[word]) + 1).ToString();
-                                myWordleForm.Focus();
-                                return word;
-                            }
-                        } 
+                            suitableWords.Add(kvp.Key);
+                        }
+                    }
+                    Random rand = new Random();
+                    int index = rand.Next(0, suitableWords.Count);
+                    string word = suitableWords.ElementAt(index);
+                    wordleWords[word] = ((wordleWords[word]) + 1);
+                    return word;
                 }
                 catch
                 {
                     return null;
                 }
-                return null;
             }
 
 
@@ -303,7 +302,7 @@ namespace CSC_102_Project
                             correctPlaces[c]++;
                         }
                     }
-                    for (int i = 0; i < guessColorMap.Length; i++)
+                    for (int i = 0; i < guessColorMap.Length; i++) // resets Color Map
                     {
                         guessColorMap[i] = Correctness.notInWord;
                     }
@@ -315,6 +314,9 @@ namespace CSC_102_Project
                             correctPlaces[correctWord.ToUpper()[i]]--;
                             continue;
                         }
+                    }
+                    for (int i = 0; i < correctWord.Length; i++)
+                    {
                         for (int i2 = 0; i2 < currentGuess.Length; i2++)
                         {
                             // If the letter is in the correct place, then skip this letter and move to the next one
@@ -333,7 +335,7 @@ namespace CSC_102_Project
                                 guessColorMap[i2] = Correctness.notInWord;
                             }
                         }
-                        
+                       
                     }
                 }
                 return returnVariable;
@@ -416,7 +418,7 @@ namespace CSC_102_Project
                 switch (Correctness)
                 {
                     case Correctness.notInWord:
-                        if (LabelToUpdate.BackColor != Color.FromArgb(200, 222, 222, 33) | LabelToUpdate.BackColor != Color.FromArgb(200, 0, 255, 0))
+                        if (LabelToUpdate.BackColor != Color.FromArgb(200, 222, 222, 33) & LabelToUpdate.BackColor != Color.FromArgb(200, 0, 255, 0))
                         {
                             LabelToUpdate.BackColor = Color.FromArgb(200, 200, 200, 200);
                         }
@@ -968,9 +970,8 @@ namespace CSC_102_Project
             }
             ToggleCustomControls();
             string customWord = testWordle.CustomWordTextBox.Text.ToUpper();
-            testWordle.CustomWordTextBox.Text = string.Empty;
-            testWordle.DebugResetGame();
             testBoard.CustomWordEntered(testWordle, customWord);
+            testWordle.DebugResetGame();
             testDisplay.RefreshWholeDisplay();
 
         }

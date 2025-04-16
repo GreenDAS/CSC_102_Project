@@ -39,7 +39,7 @@ namespace CSC_102_Project
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(884, 711);
             this.ForeColor = System.Drawing.SystemColors.Control;
-            this.MaximumSize = new System.Drawing.Size(900, 750);
+            this.MaximumSize = new System.Drawing.Size(0, 0);
             this.MinimumSize = new System.Drawing.Size(900, 750);
             this.Name = "WordleForm";
             this.Text = "Wordle";
