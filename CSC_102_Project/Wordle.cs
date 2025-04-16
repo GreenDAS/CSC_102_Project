@@ -73,6 +73,7 @@ namespace CSC_102_Project
                                         else
                                         {
                                             myWordleForm.Close();
+                                            return;
                                         }
                                         break;
                                     }
@@ -89,6 +90,7 @@ namespace CSC_102_Project
                             else
                             {
                                 myWordleForm.Close();
+                                return;
                             }
                         }
                         catch (IOException)
@@ -151,24 +153,30 @@ namespace CSC_102_Project
             /// <returns></returns>
             public string GetWord()
             {
-
-                if (wordleWords.Count == 0 | wordleWords == null)
+                try
                 {
-                    ReadWordList();
-                }
-                int lowestLeastTimesUsed = int.Parse(wordleWords.Values.Min());
-                bool suitableWordFound = false;
-                while (!suitableWordFound)
-                {
-                    Random rand = new Random();
-                    int index = rand.Next(0, wordleWords.Count);
-                    string word = wordleWords.ElementAt(index).Key;
-                    if (int.Parse(wordleWords[word]) == lowestLeastTimesUsed)
+                    if (wordleWords.Count == 0 | wordleWords == null)
                     {
-                        wordleWords[word] = (int.Parse(wordleWords[word]) + 1).ToString();
-                        myWordleForm.Focus();
-                        return word;
+                        ReadWordList();
                     }
+                    int lowestLeastTimesUsed = int.Parse(wordleWords.Values.Min());
+                    bool suitableWordFound = false;
+                        while (!suitableWordFound)
+                        {
+                            Random rand = new Random();
+                            int index = rand.Next(0, wordleWords.Count);
+                            string word = wordleWords.ElementAt(index).Key;
+                            if (int.Parse(wordleWords[word]) == lowestLeastTimesUsed)
+                            {
+                                wordleWords[word] = (int.Parse(wordleWords[word]) + 1).ToString();
+                                myWordleForm.Focus();
+                                return word;
+                            }
+                        } 
+                }
+                catch
+                {
+                    return null;
                 }
                 return null;
             }
@@ -367,6 +375,7 @@ namespace CSC_102_Project
             public void LoadNewWord()
             {
                 correctWord = myFileManager.GetWord();
+                if (correctWord == null) { return; }
                 myFileManager.StoreWordList();
             }
             #endregion

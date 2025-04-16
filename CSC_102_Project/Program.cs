@@ -16,7 +16,14 @@ namespace CSC_102_Project
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new WordleForm());
+            try
+            {
+                Application.Run(new WordleForm());
+            }
+            catch
+            {
+                MessageBox.Show("Closed Wordle");
+            }
         }
     }
 }
