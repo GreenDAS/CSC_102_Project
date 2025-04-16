@@ -28,59 +28,123 @@ namespace CSC_102_Project
             private Dictionary<string, string> wordleWords = new Dictionary<string, string>();
 
 
+
+            /// <summary>
+            /// Checks to see if the word is in the dictionary
+            /// </summary>
+            /// <param name="guess"></param>
+            /// <returns></returns>
+            public bool IsValid(string guess)
+            {
+                return wordleWords.ContainsKey(guess.ToUpper());
+            }
+
+
+
+            private void ReadWordList()
+            {
+                {
+                    // Load the file and parse the words into a dictionary
+                    bool fileFound = false;
+                    while (!fileFound)
+                    {
+                        try
+                        {
+                            using (StreamReader inputFile = new StreamReader(filePath))
+                            {
+                                while (!inputFile.EndOfStream)
+                                {
+                                    string line = inputFile.ReadLine();
+                                    string[] parts = line.Split(',');
+                                    if (parts.Length == 2)
+                                    {
+                                        fileFound = true;
+                                        wordleWords.Add(parts[0], parts[1]);
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("File is not in the correct format");
+                                        if (findWordListDialog.ShowDialog() == DialogResult.OK)
+                                        {
+                                            filePath = findWordListDialog.FileName;
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            MessageBox.Show("File not found");
+                            if (findWordListDialog.ShowDialog() == DialogResult.OK)
+                            {
+                                filePath = findWordListDialog.FileName;
+                            }
+                        }
+                        catch (IOException)
+                        {
+                            MessageBox.Show("File is not in the correct format");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"An error occurred: {ex.Message}");
+                        }
+                    }
+                }
+            }
+
+
+
+            public void StoreWordList()
+            {
+                // Store the word list in a file
+                using (StreamWriter outputFile = new StreamWriter(filePath))
+                {
+                    foreach (KeyValuePair<string, string> kvp in wordleWords)
+                    {
+                        outputFile.WriteLine($"{kvp.Key},{kvp.Value}");
+                    }
+                }
+            }
+
+
+
+
+            /// <summary>
+            /// Gets a random word from the dictionary
+            /// </summary>
+            /// <returns></returns>
+            public string GetWord()
+            {
+
+                if (wordleWords.Count == 0 | wordleWords == null)
+                {
+                    ReadWordList();
+                }
+                Random rand = new Random();
+                int index = rand.Next(0, wordleWords.Count);
+                int lowestLeastTimesUsed = int.Parse(wordleWords.Values.Min());
+                foreach (string word in wordleWords.Keys)
+                {
+                    if (int.Parse(wordleWords[word]) == lowestLeastTimesUsed)
+                    {
+                        wordleWords[word] = (int.Parse(wordleWords[word]) + 1).ToString();
+                        return word;
+                    }
+                }
+                return null;
+            }
+
+
+
             /// <summary>
             /// FileManager Constructor When No file is Given
             /// </summary>
             public FileManager(OpenFileDialog fileDialog)
             {
-                // Load the file and parse the words into a dictionary
-                bool fileFound = false;
                 findWordListDialog = fileDialog;
-                while (!fileFound)
-                {
-                    try
-                    {
-                        using (StreamReader inputFile = new StreamReader(filePath))
-                        {
-                            while (!inputFile.EndOfStream)
-                            {
-                                string line = inputFile.ReadLine();
-                                string[] parts = line.Split(',');
-                                if (parts.Length == 2)
-                                {
-                                    fileFound = true;
-                                    wordleWords.Add(parts[0], parts[1]);
-                                }
-                                else
-                                {
-                                    MessageBox.Show("File is not in the correct format");
-                                    if (findWordListDialog.ShowDialog() == DialogResult.OK)
-                                    {
-                                        filePath = findWordListDialog.FileName;
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        MessageBox.Show("File not found");
-                        if (findWordListDialog.ShowDialog() == DialogResult.OK)
-                        {
-                            filePath = findWordListDialog.FileName;
-                        }
-                    }
-                    catch (IOException)
-                    {
-                        MessageBox.Show("File is not in the correct format");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"An error occurred: {ex.Message}");
-                    }
-                }
             }
+
         }
 
 
@@ -239,6 +303,7 @@ namespace CSC_102_Project
             }
             #endregion
 
+
             /// <summary>
             /// Wordle Constructor
             /// </summary>
@@ -371,8 +436,9 @@ namespace CSC_102_Project
                         MessageBox.Show("Word is not the correct length");
                         return;
                     }
+                    
                     CustomWordEntered(wrdle, currentTempCustomWord);
-                    currentTempCustomWord = string.Empty;
+                    ResetPressed(wrdle, disp);
 
 
                     return;
@@ -667,6 +733,14 @@ namespace CSC_102_Project
             {
                 return;
             }
+            foreach (char c in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+            {
+                if (e.KeyChar == c & lastKey != e.KeyChar.ToString().ToUpper())
+                {
+                    testBoard.KeyPressed(e.KeyChar.ToString().ToUpper(), isCustomWordEnabled);
+                    break;
+                }
+            }
             if (lastKey != e.KeyChar.ToString().ToUpper())
             {
                 if (e.KeyChar == (char)Keys.Back | (char)Keys.Delete == e.KeyChar)
@@ -683,11 +757,9 @@ namespace CSC_102_Project
                     testBoard.ResetPressed(testWordle, testDisplay);
                     if (isCustomWordEnabled) { ToggleCustomControls(); }
                 }
-                else
-                {
-                    testBoard.KeyPressed(e.KeyChar.ToString().ToUpper(), isCustomWordEnabled);
-                }
-                if (isCustomWordEnabled) { testDisplay.UpdateDisplay(testWordle.CustomWordTextBox);
+                if (isCustomWordEnabled) 
+                { 
+                    testDisplay.UpdateDisplay(testWordle.CustomWordTextBox);
                 }
                 else
                 {
