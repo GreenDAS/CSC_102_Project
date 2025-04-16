@@ -17,9 +17,6 @@ namespace CSC_102_Project
 
 
         #region Class Delcarations
-
-
-
         /// <summary>
         /// File Manager Class
         /// </summary>
@@ -238,6 +235,19 @@ namespace CSC_102_Project
             public TextBox CustomWordTextBox;
 
             private FileManager myFileManager;
+
+            private string correctWordPassword = "wordle";
+
+
+
+            public string CorrectWord(string passCode)
+            {
+                if (passCode == correctWordPassword) {
+                    return correctWord;
+                }
+                return null;
+            }
+
 
             #region Game Logic Methods
             /// <summary>
@@ -544,7 +554,7 @@ namespace CSC_102_Project
                     }
                     else if (currentTimeGuessing == GUESSES_ALLOWED & !guessIsCorrect[0])
                     {
-                        MessageBox.Show($"You Lose! \nClick 'OK' to Play Again!");
+                        MessageBox.Show($"You Lose! The word was {wrdle.CorrectWord("wordle")} \nClick 'OK' to Play Again!");
                         justWonOrLost = true;
                         timesLost++;
                     }
@@ -769,7 +779,6 @@ namespace CSC_102_Project
         #endregion
 
 
-
         #region Form Init
         /// <summary>
         /// Initializes the Form and all of the controls and appropriate variables/classes
@@ -934,7 +943,6 @@ namespace CSC_102_Project
 
             ToggleCustomControls();
         }
-
 
 
         /// <summary>
