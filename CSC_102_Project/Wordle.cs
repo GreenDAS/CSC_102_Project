@@ -94,19 +94,40 @@ namespace CSC_102_Project
             }
 
 
-
+            // Store the word list in a file
             public void StoreWordList()
             {
-                // Store the word list in a file
-                using (StreamWriter outputFile = new StreamWriter(filePath))
+                bool fileFound = false;
+                while (!fileFound)
                 {
-                    foreach (KeyValuePair<string, string> kvp in wordleWords)
+                    try
                     {
-                        outputFile.WriteLine($"{kvp.Key},{kvp.Value}");
+                        using (StreamWriter outputFile = new StreamWriter(filePath))
+                        {
+                            foreach (KeyValuePair<string, string> kvp in wordleWords)
+                            {
+                                outputFile.WriteLine($"{kvp.Key},{kvp.Value}");
+                            }
+                        }
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        MessageBox.Show("File not found");
+                        if (findWordListDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            filePath = findWordListDialog.FileName;
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        MessageBox.Show("File is not in the correct format");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"An error occurred: {ex.Message}");
                     }
                 }
             }
-
 
 
 
@@ -121,11 +142,13 @@ namespace CSC_102_Project
                 {
                     ReadWordList();
                 }
-                Random rand = new Random();
-                int index = rand.Next(0, wordleWords.Count);
                 int lowestLeastTimesUsed = int.Parse(wordleWords.Values.Min());
-                foreach (string word in wordleWords.Keys)
+                bool suitableWordFound = false;
+                while (!suitableWordFound)
                 {
+                    Random rand = new Random();
+                    int index = rand.Next(0, wordleWords.Count);
+                    string word = wordleWords.ElementAt(index).Key;
                     if (int.Parse(wordleWords[word]) == lowestLeastTimesUsed)
                     {
                         wordleWords[word] = (int.Parse(wordleWords[word]) + 1).ToString();
